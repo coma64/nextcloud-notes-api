@@ -1,0 +1,10 @@
+{
+    "restructuredtext.confPath": "",
+    "python.pythonPath": "C:\\Users\\coma\\AppData\\Local\\pypoetry\\Cache\\virtualenvs\\nextcloud-notes-api-oG-YsHXB-py3.9\\Scripts\\python.exe",
+    "python.testing.pytestArgs": [
+        "tests"
+    ],
+    "python.testing.unittestEnabled": false,
+    "python.testing.nosetestsEnabled": false,
+    "python.testing.pytestEnabled": true
+}
