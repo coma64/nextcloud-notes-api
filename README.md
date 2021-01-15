@@ -4,11 +4,12 @@ A [Nextcloud Notes](https://github.com/nextcloud/notes) API wrapper
 
 # Todo
 
-- ci tests
+- downgrade required python versions
+- add more platforms to github test action
+- action indicators in readme
 - publish to pip and readthedocs
 - usage examples
 - classes
-  - Note
-    - api note attributes
   - NotesApi
     - api endpoints
+    - check_required_api
