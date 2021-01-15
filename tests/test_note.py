@@ -127,3 +127,29 @@ def test_note_modified_to_datetime():
     note = Note(1337, 'ham', 'spam', '', False, dt.timestamp())
 
     assert dt == note.modified_to_datetime()
+
+
+def test_note_modified_to_str():
+    dt = datetime.now()
+    note = Note(1337, 'ham', 'spam', '', False, dt.timestamp())
+
+    assert note.modified_to_str() == dt.strftime('%Y-%m-%d %H:%M:%S')
+
+
+def test_note_repr():
+    note = Note(1337, 'ham', 'spam', '', False, 1234)
+
+    assert (
+        repr(note) ==
+        "nextcloud_notes_api.note.Note({'id': 1337, 'content': 'ham', 'title': 'spam', 'category': '', 'favorite': False, 'modified': 1234})"
+    )
+
+
+def test_note_str():
+    dt = datetime.now()
+    note = Note(1337, 'ham', 'spam', '', False, dt.timestamp())
+
+    assert (
+        str(note) ==
+        f"nextcloud_notes_api.note.Note({{'id': 1337, 'content': 'ham', 'title': 'spam', 'category': '', 'favorite': False, 'modified': '{format(dt.strftime('%Y-%m-%d %H:%M:%S'))}'}})"
+    )
