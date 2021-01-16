@@ -149,8 +149,7 @@ class Note:
         return self.to_dict() == other.to_dict()
 
     def __repr__(self) -> str:
-        cls = self.__class__
-        return f'{cls.__module__}.{cls.__name__}({self.to_dict()})'
+        return f'<Note [{self.id}]>'
 
     def __str__(self) -> str:
         cls = self.__class__

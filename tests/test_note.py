@@ -141,7 +141,7 @@ def test_note_repr():
 
     assert (
         repr(note) ==
-        "nextcloud_notes_api.note.Note({'id': 1337, 'content': 'ham', 'title': 'spam', 'category': '', 'favorite': False, 'modified': 1234})"
+        "<Note [1337]>"
     )
 
 
