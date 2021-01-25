@@ -8,7 +8,7 @@
 </a>
 <a href="https://codecov.io/gh/coma64/nextcloud-notes-api" target="_blank">
 <img
-src="https://img.shields.io/codecov/c/github/coma64/nextcloud-notes-apicolor=%2334D058"
+src="https://img.shields.io/codecov/c/github/coma64/nextcloud-notes-api?color=%2334D058"
 alt="Coverage">
 </a>
 <br />
