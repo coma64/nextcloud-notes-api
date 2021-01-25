@@ -8,50 +8,42 @@ class Note:
 
     def __init__(
         self,
-        id: int,
-        content: str,
         title: str,
-        category: str,
-        favorite: bool,
-        modified: int = None,
+        content: str,
         *,
+        category: str = '',
+        favorite: bool = False,
+        id: int = None,
+        modified: int = None,
         generate_modified: bool = False
     ):
         """See `Note.from_dict` and `Note.to_dict` for conversion from and to a dict
 
         Args:
-            id (int): A unique note id
             content (str): Note content
             title (str): Note title
             category (str): Note category
             favorite (bool): Whether the note is marked as a favorite
+            id (int, optional): A unique note id. Defaults to None
             modified (int, optional): When the note has last been modified. Defaults to None.
             generate_modified (bool, optional): Whether`Note.modified` should be set to the 
                 current time. Defaults to False.
-
-        Raises:
-            ValueError: Neither `modified` has been passed nor was `generate_modified` True,
-                `Note.modified` cannot be left empty
         """
-        if not modified and not generate_modified:
-            raise ValueError(
-                f'Either modified has to be passed or generate_modified has to be True.'
-            )
-        self.id = id
-        """int: A unique note id"""
-        self.content = content
-        """str: Note content"""
         self.title = title
         """str: Note title"""
+        self.content = content
+        """str: Note content"""
         self.category = category
         """str: Note category"""
         self.favorite = favorite
         """bool: Whether the note is marked as a favorite"""
+        self.id = id
+        """int: A unique note id"""
         self.modified = modified
         """int: When the note has last been modified"""
 
         if generate_modified:
-            self.update_modified(datetime.now())
+            self.update_modified()
 
     @classmethod
     def from_dict(cls: Note, data: Dict[str, Any], *, generate_modified: bool = False) -> Note:
@@ -70,56 +62,35 @@ class Note:
         Raises:
             KeyError: `data` didn't contain all necessary keys
         """
+        data_copy = dict(data)
         instance = cls(
-            data['id'],
-            data['content'],
-            data['title'],
-            data['category'],
-            data['favorite'],
-            data['modified'] if not generate_modified else None,
+            data_copy.pop('title'),
+            data_copy.pop('content'),
+            category=data_copy.pop('category', ''),
+            favorite=data_copy.pop('favorite', False),
+            id=data_copy.pop('id', None),
+            modified=data_copy.pop('modified', None),
             generate_modified=generate_modified
         )
 
         return instance
 
     def to_dict(
-        self,
-        *,
-        omit_modified: bool = False,
-        update_modified: bool = False
+        self
     ) -> Dict[str, Any]:
         """Generate `dict` from this class
-
-        The Nextcloud Notes api will automatically set the modified timestamp if it's missing
-
-        Args:
-            omit_modified (bool, optional): Whether to omit the `Note.modified`. Defaults to False
-            update_modified (bool, optional): Whether to set `Note.modified` to the current
-                time, before creating the `dict`. Defaults to False
 
         Returns:
             Dict[str, Any]: A `dict` containing the attributes of this class
         """
-        if update_modified:
-            self.update_modified(datetime.now())
-
-        if omit_modified:
-            return {
-                'id': self.id,
-                'content': self.content,
-                'title': self.title,
-                'category': self.category,
-                'favorite': self.favorite,
-            }
-        else:
-            return {
-                'id': self.id,
-                'content': self.content,
-                'title': self.title,
-                'category': self.category,
-                'favorite': self.favorite,
-                'modified': self.modified
-            }
+        return {
+            'title': self.title,
+            'content': self.content,
+            'category': self.category,
+            'favorite': self.favorite,
+            'id': self.id,
+            'modified': self.modified
+        }
 
     def modified_to_datetime(self) -> datetime:
         """Convert the unix timestamp `Note.modified` to a `datetime` object
@@ -129,21 +100,29 @@ class Note:
         """
         return datetime.fromtimestamp(self.modified)
 
-    def modified_to_str(self) -> str:
-        """Convert the unix timestamp `Note.modified` to a `str`
+    def modified_to_str(self, format: str = '%Y-%m-%d %H:%M:%S') -> str:
+        """Convert the unix timestamp `Note.modified` to a `str` with format `format`
+
+        Args:
+            format (str): The format string supplied to `datetime.strftime()`. Defaults to 
+                '%Y-%m-%d %H:%M:%S'
 
         Returns:
             str: A `str` representing `Note.modified`
         """
-        return datetime.fromtimestamp(self.modified).strftime('%Y-%m-%d %H:%M:%S')
+        return datetime.fromtimestamp(self.modified).strftime(format)
 
-    def update_modified(self, dt: datetime) -> None:
+    def update_modified(self, dt: datetime = None) -> None:
         """Set `Note.modified` to `dt`
 
         Args:
-            dt (datetime): The `datetime` object to set `Note.modified` to
+            dt (datetime): The `datetime` object to set `Note.modified` to. Defaults to 
+                `datetime.now()`
         """
-        self.modified = dt.timestamp()
+        if dt:
+            self.modified = dt.timestamp()
+        else:
+            self.modified = datetime.now().timestamp()
 
     def __eq__(self, other: Note) -> bool:
         return self.to_dict() == other.to_dict()
@@ -152,7 +131,6 @@ class Note:
         return f'<Note [{self.id}]>'
 
     def __str__(self) -> str:
-        cls = self.__class__
         elements = self.to_dict()
         elements['modified'] = self.modified_to_str()
-        return f'{cls.__module__}.{cls.__name__}({elements})'
+        return f'Note({elements})'
