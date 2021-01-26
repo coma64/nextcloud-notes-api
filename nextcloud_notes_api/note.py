@@ -20,10 +20,10 @@ class Note:
         """See `Note.from_dict` and `Note.to_dict` for conversion from and to a dict
 
         Args:
-            content (str): Note content
             title (str): Note title
-            category (str): Note category
-            favorite (bool): Whether the note is marked as a favorite
+            content (str): Note content
+            category (str, optional): Note category. Defaults to ''
+            favorite (bool, optional): Whether the note is marked as a favorite. Defaults to False
             id (int, optional): A unique note id. Defaults to None
             modified (int, optional): When the note has last been modified. Defaults to None.
             generate_modified (bool, optional): Whether`Note.modified` should be set to the 
@@ -57,10 +57,10 @@ class Note:
                 current time. Defaults to False.
 
         Returns:
-            Note: Initialized `Note`
+            Note: `Note` initialized with `data`
 
         Raises:
-            KeyError: `data` didn't contain all necessary keys
+            KeyError: `data` didn't contain a necessary key
         """
         data_copy = dict(data)
         instance = cls(
