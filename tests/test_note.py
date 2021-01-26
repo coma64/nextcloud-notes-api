@@ -46,17 +46,9 @@ def test_note_from_dict():
     assert note == Note.from_dict(note_dict)
 
 
-def test_note_from_dict_raises_too_few_elements():
-    note_dict = {
-        'title': 'todo',
-        'category': 'important',
-        'favorite': True,
-        'id': 1337,
-        'modified': 1234
-    }
-
-    with pytest.raises(Exception):
-        Note.from_dict(note_dict)
+def test_note_from_dict_empty_note():
+    note_dict = {}
+    Note.from_dict(note_dict)
 
 
 def test_note_from_dict_too_many_elements():

@@ -8,8 +8,8 @@ class Note:
 
     def __init__(
         self,
-        title: str,
-        content: str,
+        title: str = '',
+        content: str = '',
         *,
         category: str = '',
         favorite: bool = False,
@@ -20,8 +20,8 @@ class Note:
         """See `Note.from_dict` and `Note.to_dict` for conversion from and to a dict
 
         Args:
-            title (str): Note title
-            content (str): Note content
+            title (str, optional): Note title. Defaults to ''
+            content (str, optional): Note content. Defaults to ''
             category (str, optional): Note category. Defaults to ''
             favorite (bool, optional): Whether the note is marked as a favorite. Defaults to False
             id (int, optional): A unique note id. Defaults to None
@@ -64,8 +64,8 @@ class Note:
         """
         data_copy = dict(data)
         instance = cls(
-            data_copy.pop('title'),
-            data_copy.pop('content'),
+            data_copy.pop('title', ''),
+            data_copy.pop('content', ''),
             category=data_copy.pop('category', ''),
             favorite=data_copy.pop('favorite', False),
             id=data_copy.pop('id', None),
