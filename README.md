@@ -19,6 +19,10 @@ A [Nextcloud Notes](https://github.com/nextcloud/notes) API wrapper
 
 ## Todo
 
+- [ ] remove Note.from_dict and use kwarg only init
+- [ ] add NotesApi docs
+- [ ] update Note tests
+- [ ] use new type hints (List -> Sequence)
 - [ ] publish to pip and readthedocs
 - [ ] stricter code formatter than autopep8
 - [ ] run tests powershell / shell script
