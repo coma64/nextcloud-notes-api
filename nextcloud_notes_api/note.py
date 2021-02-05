@@ -62,7 +62,7 @@ class Note:
         Raises:
             KeyError: `data` didn't contain a necessary key
         """
-        data_copy = dict(data)
+        data_copy = dict(**data)
         instance = cls(
             data_copy.pop('title', ''),
             data_copy.pop('content', ''),
