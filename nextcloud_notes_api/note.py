@@ -134,4 +134,4 @@ class Note:
         elements = self.to_dict()
         if self.modified:
             elements['modified'] = self.modified_to_str()
-        return f'Note({elements})'
+        return f'Note[{elements}]'

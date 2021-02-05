@@ -174,7 +174,7 @@ def test_note_str():
 
     assert (
         str(note) ==
-        f"Note({{'title': 'todo', 'content': 'buy potatoes', 'category': 'important', 'favorite': True, 'id': 1337, 'modified': '{note.modified_to_str()}'}})"
+        f"Note[{{'title': 'todo', 'content': 'buy potatoes', 'category': 'important', 'favorite': True, 'id': 1337, 'modified': '{note.modified_to_str()}'}}]"
     )
 
 
@@ -182,5 +182,5 @@ def test_note_str_empty_note():
     note = Note()
 
     assert (
-        str(note) == "Note({'title': '', 'content': '', 'category': '', 'favorite': False, 'id': None, 'modified': None})"
+        str(note) == "Note[{'title': '', 'content': '', 'category': '', 'favorite': False, 'id': None, 'modified': None}]"
     )
