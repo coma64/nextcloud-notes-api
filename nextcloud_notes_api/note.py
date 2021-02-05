@@ -16,7 +16,7 @@ class Note:
         id: int = None,
         modified: int = None,
         generate_modified: bool = False,
-        **_: Any
+        **_: Any,
     ):
         """See `Note.to_dict` for conversion to a dict
 
@@ -27,7 +27,7 @@ class Note:
             favorite (bool, optional): Whether the note is marked as a favorite. Defaults to False
             id (int, optional): A unique note id. Defaults to None
             modified (int, optional): When the note has last been modified. Defaults to None.
-            generate_modified (bool, optional): Whether`Note.modified` should be set to the 
+            generate_modified (bool, optional): Whether`Note.modified` should be set to the
                 current time. Defaults to False.
             _(Any, optional): Discard unused keyword arguments
         """
@@ -47,9 +47,7 @@ class Note:
         if generate_modified:
             self.update_modified()
 
-    def to_dict(
-        self
-    ) -> Dict[str, Any]:
+    def to_dict(self) -> Dict[str, Any]:
         """Generate `dict` from this class
 
         Returns:
@@ -61,7 +59,7 @@ class Note:
             'category': self.category,
             'favorite': self.favorite,
             'id': self.id,
-            'modified': self.modified
+            'modified': self.modified,
         }
 
     def modified_to_datetime(self) -> datetime:
@@ -76,7 +74,7 @@ class Note:
         """Convert the unix timestamp `Note.modified` to a `str` with format `format`
 
         Args:
-            format (str): The format string supplied to `datetime.strftime()`. Defaults to 
+            format (str): The format string supplied to `datetime.strftime()`. Defaults to
                 '%Y-%m-%d %H:%M:%S'
 
         Returns:
@@ -88,7 +86,7 @@ class Note:
         """Set `Note.modified` to `dt`
 
         Args:
-            dt (datetime): The `datetime` object to set `Note.modified` to. Defaults to 
+            dt (datetime): The `datetime` object to set `Note.modified` to. Defaults to
                 `datetime.now()`
         """
         if dt:

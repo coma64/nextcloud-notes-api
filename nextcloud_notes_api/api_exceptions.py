@@ -5,10 +5,7 @@ class NotesApiError(Exception):
     """All NotesApi Exceptions inherit from this class"""
 
     def __init__(self, msg='', *_, **kwargs):
-        self.msg = (
-            msg +
-            ', '.join(f'{key}="{val}"' for key, val in kwargs.items())
-        )
+        self.msg = msg + ', '.join(f'{key}="{val}"' for key, val in kwargs.items())
 
     def __str__(self):
         return self.msg
@@ -23,7 +20,7 @@ class InvalidNextcloudCredentials(NotesApiError):
             'Invalid credentials: ',
             username=username,
             password=password,
-            hostname=hostname
+            hostname=hostname,
         )
 
 
@@ -32,10 +29,7 @@ class InvalidNoteId(NotesApiError):
 
     def __init__(self, note_id: int, hostname: str):
         NotesApiError.__init__(
-            self,
-            'Invalid note id: ',
-            note_id=note_id,
-            hostname=hostname
+            self, 'Invalid note id: ', note_id=note_id, hostname=hostname
         )
 
 
@@ -44,10 +38,7 @@ class NoteNotFound(NotesApiError):
 
     def __init__(self, note_id: int, hostname: str):
         NotesApiError.__init__(
-            self,
-            'Note not found: ',
-            note_id=note_id,
-            hostname=hostname
+            self, 'Note not found: ', note_id=note_id, hostname=hostname
         )
 
 
@@ -59,5 +50,5 @@ class InsufficientNextcloudStorage(NotesApiError):
             self,
             'Not enough free space for saving note: ',
             hostname=hostname,
-            note=note
+            note=note,
         )

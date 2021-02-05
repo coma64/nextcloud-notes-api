@@ -7,14 +7,16 @@ from nextcloud_notes_api import Note
 
 
 def _random_note() -> Note:
-    def random_str(): return ''.join(choices(printable, k=randint(0, 10)))
+    def random_str():
+        return ''.join(choices(printable, k=randint(0, 10)))
+
     note_dict = {
         'title': random_str(),
         'content': random_str(),
         'category': random_str(),
         'favorite': choice([True, False]),
         'id': randint(0, 10_000),
-        'modified': randint(0, 10_000)
+        'modified': randint(0, 10_000),
     }
 
     # All attributes are optional

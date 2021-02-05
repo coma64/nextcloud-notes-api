@@ -15,11 +15,7 @@ class DatetimeNowMock:
 
 def test_note_generate_modified(monkeypatch):
     dt = datetime.now()
-    monkeypatch.setattr(
-        nextcloud_notes_api.note,
-        'datetime',
-        DatetimeNowMock(dt)
-    )
+    monkeypatch.setattr(nextcloud_notes_api.note, 'datetime', DatetimeNowMock(dt))
     note = Note(generate_modified=True)
 
     assert note.modified == dt.timestamp()
@@ -32,7 +28,7 @@ def test_note_init():
         'category': 'Todo',
         'favorite': True,
         'id': 1337,
-        'modified': 1234
+        'modified': 1234,
     }
 
     note = Note(**note_dict)
@@ -47,7 +43,7 @@ def test_note_init_unused_kwargs():
         'favorite': True,
         'id': 1337,
         'modified': 1234,
-        'unused kwarg': 324
+        'unused kwarg': 324,
     }
 
     note = Note(**note_dict)
@@ -62,7 +58,7 @@ def test_note_to_dict():
         'category': 'important',
         'favorite': True,
         'id': 1337,
-        'modified': 1234
+        'modified': 1234,
     }
 
     note = Note(**note_dict)
@@ -71,11 +67,7 @@ def test_note_to_dict():
 
 def test_note_update_modified(monkeypatch):
     dt = datetime.now()
-    monkeypatch.setattr(
-        nextcloud_notes_api.note,
-        'datetime',
-        DatetimeNowMock(dt)
-    )
+    monkeypatch.setattr(nextcloud_notes_api.note, 'datetime', DatetimeNowMock(dt))
 
     note = Note(
         'todo',
@@ -83,7 +75,7 @@ def test_note_update_modified(monkeypatch):
         category='important',
         favorite=True,
         id=1337,
-        modified=1234
+        modified=1234,
     )
     note.update_modified()
 
@@ -98,7 +90,7 @@ def test_note_modified_to_datetime():
         category='important',
         favorite=True,
         id=1337,
-        modified=dt.timestamp()
+        modified=dt.timestamp(),
     )
 
     assert dt == note.modified_to_datetime()
@@ -112,7 +104,7 @@ def test_note_modified_to_str():
         category='important',
         favorite=True,
         id=1337,
-        modified=dt.timestamp()
+        modified=dt.timestamp(),
     )
 
     assert note.modified_to_str() == dt.strftime('%Y-%m-%d %H:%M:%S')
@@ -125,13 +117,10 @@ def test_note_repr():
         category='important',
         favorite=True,
         id=1337,
-        modified=1234
+        modified=1234,
     )
 
-    assert (
-        repr(note) ==
-        "<Note [1337]>"
-    )
+    assert repr(note) == "<Note [1337]>"
 
 
 def test_note_str():
@@ -141,12 +130,12 @@ def test_note_str():
         category='important',
         favorite=True,
         id=1337,
-        modified=1234
+        modified=1234,
     )
 
     assert (
-        str(note) ==
-        f"Note[{{'title': 'todo', 'content': 'buy potatoes', 'category': 'important', 'favorite': True, 'id': 1337, 'modified': '{note.modified_to_str()}'}}]"
+        str(note)
+        == f"Note[{{'title': 'todo', 'content': 'buy potatoes', 'category': 'important', 'favorite': True, 'id': 1337, 'modified': '{note.modified_to_str()}'}}]"
     )
 
 
@@ -154,5 +143,6 @@ def test_note_str_empty_note():
     note = Note()
 
     assert (
-        str(note) == "Note[{'title': '', 'content': '', 'category': '', 'favorite': False, 'id': None, 'modified': None}]"
+        str(note)
+        == "Note[{'title': '', 'content': '', 'category': '', 'favorite': False, 'id': None, 'modified': None}]"
     )

@@ -8,7 +8,7 @@ from .api_exceptions import (
     InsufficientNextcloudStorage,
     InvalidNextcloudCredentials,
     InvalidNoteId,
-    NoteNotFound
+    NoteNotFound,
 )
 
 
@@ -17,13 +17,17 @@ class NotesApi:
 
     https://github.com/nextcloud/notes/blob/master/docs/api/v1.md
     """
+
     @dataclass
     class EtagCache:
         """Convenience class for caching notes using http etags"""
+
         etag: str = ''
         notes: List[Note] = field(default_factory=list)
 
-    def __init__(self, username: str, password: str, hostname: str, *, etag_caching: bool = True):
+    def __init__(
+        self, username: str, password: str, hostname: str, *, etag_caching: bool = True
+    ):
         """
         Args:
             username (str): Username
@@ -42,10 +46,7 @@ class NotesApi:
         """bool: Whether to cache notes using http etags"""
 
         self._etag_cache = NotesApi.EtagCache()
-        self.common_headers = {
-            'OCS-APIRequest': 'true',
-            'Accept': 'application/json'
-        }
+        self.common_headers = {'OCS-APIRequest': 'true', 'Accept': 'application/json'}
 
     @property
     def auth_pair(self) -> Tuple[str]:
@@ -58,10 +59,14 @@ class NotesApi:
             str: Highest supported Notes app api version by Nextcloud server
         """
         response = get(
-            f'https://{self.hostname}/ocs/v2.php/cloud/capabilities', auth=self.auth_pair, headers=self.common_headers
+            f'https://{self.hostname}/ocs/v2.php/cloud/capabilities',
+            auth=self.auth_pair,
+            headers=self.common_headers,
         )
 
-        return response.json()['ocs']['data']['capabilities']['notes']['api_version'][-1]
+        return response.json()['ocs']['data']['capabilities']['notes']['api_version'][
+            -1
+        ]
 
     def get_all_notes(self) -> Union[Iterator[Note], List[Note]]:
         """Get all notes
@@ -77,15 +82,16 @@ class NotesApi:
             headers['If-None-Match'] = self._etag_cache.etag
 
         response = get(
-            f'https://{self.hostname}/index.php/apps/notes/api/v1/notes', auth=self.auth_pair, headers=headers
+            f'https://{self.hostname}/index.php/apps/notes/api/v1/notes',
+            auth=self.auth_pair,
+            headers=headers,
         )
 
         if response.status_code == 200 and self.etag_caching:
             notes = [Note(**note_dict) for note_dict in response.json()]
             # Update cache
             self._etag_cache = NotesApi.EtagCache(
-                response.headers['ETag'],
-                deepcopy(notes)
+                response.headers['ETag'], deepcopy(notes)
             )
             return notes
         elif response.status_code == 200 and not self.etag_caching:
@@ -95,9 +101,7 @@ class NotesApi:
             return self._etag_cache.notes
         elif response.status_code == 401:
             raise InvalidNextcloudCredentials(
-                self.username,
-                self.password,
-                self.hostname
+                self.username, self.password, self.hostname
             )
 
     def get_single_note(self, note_id: int) -> Note:
@@ -115,7 +119,9 @@ class NotesApi:
             NoteNotFound: Note with id `note_id` doesn't exist
         """
         response = get(
-            f'https://{self.hostname}/index.php/apps/notes/api/v1/notes/{note_id}', auth=self.auth_pair, headers=self.common_headers
+            f'https://{self.hostname}/index.php/apps/notes/api/v1/notes/{note_id}',
+            auth=self.auth_pair,
+            headers=self.common_headers,
         )
 
         if response.status_code == 200:
@@ -124,7 +130,8 @@ class NotesApi:
             raise InvalidNoteId(note_id, self.hostname)
         elif response.status_code == 401:
             raise InvalidNextcloudCredentials(
-                self.username, self.password, self.hostname)
+                self.username, self.password, self.hostname
+            )
         elif response.status_code == 404:
             raise NoteNotFound(note_id, self.hostname)
 
@@ -149,7 +156,10 @@ class NotesApi:
             del data['id']
 
         response = post(
-            f'https://{self.hostname}/index.php/apps/notes/api/v1/notes', auth=self.auth_pair, headers=self.common_headers, data=data
+            f'https://{self.hostname}/index.php/apps/notes/api/v1/notes',
+            auth=self.auth_pair,
+            headers=self.common_headers,
+            data=data,
         )
 
         if response.status_code == 200:
@@ -158,12 +168,13 @@ class NotesApi:
             raise InvalidNoteId(note.id, self.hostname)
         elif response.status_code == 401:
             raise InvalidNextcloudCredentials(
-                self.username, self.password, self.hostname)
+                self.username, self.password, self.hostname
+            )
         elif response.status_code == 507:
             raise InsufficientNextcloudStorage(self.hostname, note)
 
     def update_note(self, note: Note) -> Note:
-        """Update `note` 
+        """Update `note`
 
         Args:
             note (Note): New note, `note.id` has to be the id of the note to be replaced
@@ -185,7 +196,10 @@ class NotesApi:
         del data['id']
 
         response = put(
-            f'https://{self.hostname}/index.php/apps/notes/api/v1/notes/{note.id}', auth=self.auth_pair, headers=self.common_headers, data=data
+            f'https://{self.hostname}/index.php/apps/notes/api/v1/notes/{note.id}',
+            auth=self.auth_pair,
+            headers=self.common_headers,
+            data=data,
         )
 
         if response.status_code == 200:
@@ -194,9 +208,7 @@ class NotesApi:
             raise InvalidNoteId(note.id, self.hostname)
         elif response.status_code == 401:
             raise InvalidNextcloudCredentials(
-                self.username,
-                self.password,
-                self.hostname
+                self.username, self.password, self.hostname
             )
         elif response.status_code == 404:
             raise NoteNotFound(note.id, self.hostname)
@@ -217,16 +229,14 @@ class NotesApi:
         response = delete(
             f'https://{self.hostname}/index.php/apps/notes/api/v1/notes/{note_id}',
             auth=self.auth_pair,
-            headers=self.common_headers
+            headers=self.common_headers,
         )
 
         if response.status_code == 400:
             raise InvalidNoteId(note_id, self.hostname)
         elif response.status_code == 401:
             raise InvalidNextcloudCredentials(
-                self.username,
-                self.password,
-                self.hostname
+                self.username, self.password, self.hostname
             )
         elif response.status_code == 404:
             raise NoteNotFound(note_id, self.hostname)

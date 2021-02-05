@@ -4,7 +4,7 @@ from .api_exceptions import (
     InsufficientNextcloudStorage,
     InvalidNextcloudCredentials,
     InvalidNoteId,
-    NoteNotFound
+    NoteNotFound,
 )
 
 __version__ = '0.1.0'
