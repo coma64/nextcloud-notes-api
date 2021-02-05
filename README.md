@@ -24,7 +24,6 @@ A [Nextcloud Notes](https://github.com/nextcloud/notes) API wrapper
 - [ ] run tests powershell / shell script
 - [ ] build docs shell script
 - [ ] usage examples
-- [ ] classes
-  - [ ] NotesApi
-    - [ ] api endpoints
-    - [ ] check_required_api
+- [x] classes
+  - [x] NotesApi
+    - [x] api endpoints

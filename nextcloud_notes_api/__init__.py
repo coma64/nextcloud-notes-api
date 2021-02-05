@@ -1,5 +1,10 @@
 from .note import Note
-# from .api import NotesApi
+from .api_wrapper import NotesApi
+from .api_exceptions import (
+    InsufficientNextcloudStorage,
+    InvalidNextcloudCredentials,
+    InvalidNoteId,
+    NoteNotFound
+)
 
 __version__ = '0.1.0'
-__all__ = ['Note']
