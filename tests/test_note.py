@@ -20,67 +20,39 @@ def test_note_generate_modified(monkeypatch):
         'datetime',
         DatetimeNowMock(dt)
     )
-    note = Note('', '', generate_modified=True)
+    note = Note(generate_modified=True)
 
     assert note.modified == dt.timestamp()
 
 
-def test_note_from_dict():
+def test_note_init():
     note_dict = {
-        'title': 'todo',
-        'content': 'buy potatoes',
-        'category': 'important',
+        'title': 'Spam',
+        'content': 'Bacon',
+        'category': 'Todo',
         'favorite': True,
         'id': 1337,
         'modified': 1234
     }
-    note = Note(
-        'todo',
-        'buy potatoes',
-        category='important',
-        favorite=True,
-        id=1337,
-        modified=1234
-    )
 
-    assert note == Note.from_dict(note_dict)
+    note = Note(**note_dict)
+    assert note_dict == note.to_dict()
 
 
-def test_note_from_dict_empty_note():
-    note_dict = {}
-    Note.from_dict(note_dict)
-
-
-def test_note_from_dict_too_many_elements():
+def test_note_init_unused_kwargs():
     note_dict = {
-        'title': 'todo',
-        'content': 'buy potatoes',
-        'category': 'important',
+        'title': 'Spam',
+        'content': 'Bacon',
+        'category': 'Todo',
         'favorite': True,
         'id': 1337,
         'modified': 1234,
-        'error': False,
-        'errorMessage': ''
-    }
-    note = Note(
-        'todo',
-        'buy potatoes',
-        category='important',
-        favorite=True,
-        id=1337,
-        modified=1234
-    )
-
-    assert note == Note.from_dict(note_dict)
-
-
-def test_note_from_dict_generate_modified():
-    note_dict = {
-        'title': 'todo',
-        'content': 'buy potatoes',
+        'unused kwarg': 324
     }
 
-    assert Note.from_dict(note_dict, generate_modified=True).modified
+    note = Note(**note_dict)
+    del note_dict['unused kwarg']
+    assert note_dict == note.to_dict()
 
 
 def test_note_to_dict():
@@ -93,7 +65,7 @@ def test_note_to_dict():
         'modified': 1234
     }
 
-    note = Note.from_dict(note_dict)
+    note = Note(**note_dict)
     assert note_dict == note.to_dict()
 
 

@@ -81,7 +81,7 @@ class NotesApi:
         )
 
         if response.status_code == 200 and self.etag_caching:
-            notes = list(map(Note.from_dict, response.json()))
+            notes = [Note(**note_dict) for note_dict in response.json()]
             # Update cache
             self._etag_cache = NotesApi.EtagCache(
                 response.headers['ETag'],
@@ -89,7 +89,7 @@ class NotesApi:
             )
             return notes
         elif response.status_code == 200 and not self.etag_caching:
-            return map(Note.from_dict, response.json())
+            return (Note(**note_dict) for note_dict in response.json())
         elif response.status_code == 304 and self.etag_caching:
             # Cache valid
             return self._etag_cache.notes
@@ -119,7 +119,7 @@ class NotesApi:
         )
 
         if response.status_code == 200:
-            return Note.from_dict(response.json())
+            return Note(**response.json())
         elif response.status_code == 400:
             raise InvalidNoteId(note_id, self.hostname)
         elif response.status_code == 401:
@@ -153,7 +153,7 @@ class NotesApi:
         )
 
         if response.status_code == 200:
-            return Note.from_dict(response.json())
+            return Note(**response.json())
         elif response.status_code == 400:
             raise InvalidNoteId(note.id, self.hostname)
         elif response.status_code == 401:
@@ -189,7 +189,7 @@ class NotesApi:
         )
 
         if response.status_code == 200:
-            return Note.from_dict(response.json())
+            return Note(**response.json())
         elif response.status_code == 400:
             raise InvalidNoteId(note.id, self.hostname)
         elif response.status_code == 401:

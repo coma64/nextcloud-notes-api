@@ -15,9 +15,10 @@ class Note:
         favorite: bool = False,
         id: int = None,
         modified: int = None,
-        generate_modified: bool = False
+        generate_modified: bool = False,
+        **_: Any
     ):
-        """See `Note.from_dict` and `Note.to_dict` for conversion from and to a dict
+        """See `Note.to_dict` for conversion to a dict
 
         Args:
             title (str, optional): Note title. Defaults to ''
@@ -28,6 +29,7 @@ class Note:
             modified (int, optional): When the note has last been modified. Defaults to None.
             generate_modified (bool, optional): Whether`Note.modified` should be set to the 
                 current time. Defaults to False.
+            _(Any, optional): Discard unused keyword arguments
         """
         self.title = title
         """str: Note title"""
@@ -44,36 +46,6 @@ class Note:
 
         if generate_modified:
             self.update_modified()
-
-    @classmethod
-    def from_dict(cls: Note, data: Dict[str, Any], *, generate_modified: bool = False) -> Note:
-        """Init class from a `dict` discarding unused elements
-
-        See `Note.__init__()` args for the required values of `data`
-
-        Args:
-            data (Dict[str, Any]): The `dict` to initialize this class from
-            generate_modified (bool, optional): Whether `Note.modified` should be set to the 
-                current time. Defaults to False.
-
-        Returns:
-            Note: `Note` initialized with `data`
-
-        Raises:
-            KeyError: `data` didn't contain a necessary key
-        """
-        data_copy = dict(**data)
-        instance = cls(
-            data_copy.pop('title', ''),
-            data_copy.pop('content', ''),
-            category=data_copy.pop('category', ''),
-            favorite=data_copy.pop('favorite', False),
-            id=data_copy.pop('id', None),
-            modified=data_copy.pop('modified', None),
-            generate_modified=generate_modified
-        )
-
-        return instance
 
     def to_dict(
         self

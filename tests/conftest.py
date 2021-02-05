@@ -21,7 +21,7 @@ def _random_note() -> Note:
     for _ in range(randint(0, len(note_dict))):
         del note_dict[choice(list(note_dict.keys()))]
 
-    return Note.from_dict(note_dict)
+    return Note(**note_dict)
 
 
 @fixture
