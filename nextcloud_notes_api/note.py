@@ -132,5 +132,6 @@ class Note:
 
     def __str__(self) -> str:
         elements = self.to_dict()
-        elements['modified'] = self.modified_to_str()
+        if self.modified:
+            elements['modified'] = self.modified_to_str()
         return f'Note({elements})'
