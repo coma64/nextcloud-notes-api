@@ -24,7 +24,7 @@ A [Nextcloud Notes](https://github.com/nextcloud/notes) API wrapper
 - [ ] update Note tests
 - [ ] use new type hints (List -> Sequence)
 - [ ] publish to pip and readthedocs
-- [ ] stricter code formatter than autopep8
+- [x] stricter code formatter than autopep8
 - [ ] run tests powershell / shell script
 - [ ] build docs shell script
 - [ ] usage examples
