@@ -1,7 +1,6 @@
 import pytest
 from requests_mock.mocker import Mocker as RequestsMocker
 from typing import ContextManager, Iterator
-from contextlib import contextmanager
 
 from nextcloud_notes_api import (
     NotesApi,
@@ -11,11 +10,6 @@ from nextcloud_notes_api import (
     InvalidNoteId,
     NoteNotFound,
 )
-
-
-@contextmanager
-def does_note_raise():
-    yield
 
 
 @pytest.fixture
@@ -200,6 +194,23 @@ def test_notes_api_update_note(
     )
 
     assert notes_api.update_note(random_note) == server_note
+
+
+def test_notes_api_update_note_id_not_set(
+    random_note: Note, notes_api: NotesApi, requests_mock: RequestsMocker
+):
+    random_note.id = None
+    # Server updates this
+    server_note = random_note
+    server_note.modified = 1234
+
+    requests_mock.put(
+        f'https://{notes_api.hostname}/index.php/apps/notes/api/v1/notes/{random_note.id}',
+        json=server_note.to_dict(),
+    )
+
+    with pytest.raises(ValueError):
+        assert notes_api.update_note(random_note) == server_note
 
 
 @pytest.mark.parametrize(

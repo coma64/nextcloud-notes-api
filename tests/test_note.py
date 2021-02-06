@@ -82,6 +82,22 @@ def test_note_update_modified(monkeypatch):
     assert note.modified == dt.timestamp()
 
 
+def test_note_update_modified_user_timestamp(monkeypatch):
+    dt = datetime.now()
+
+    note = Note(
+        'todo',
+        'buy potatoes',
+        category='important',
+        favorite=True,
+        id=1337,
+        modified=1234,
+    )
+    note.update_modified(dt)
+
+    assert note.modified == dt.timestamp()
+
+
 def test_note_modified_to_datetime():
     dt = datetime.now()
     note = Note(
