@@ -47,7 +47,7 @@ def test_note_init_modified_datetime():
         'favorite': True,
         'id': 1337,
         'modified': 1234.0,
-        'modified_datetime': dt
+        'modified_datetime': dt,
     }
     # modified should be set to modified_datetime and not modified
     note = Note(**note_dict)
