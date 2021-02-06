@@ -147,7 +147,7 @@ def test_notes_api_create_note(
 
     server_note = random_note
     server_note.id = 1337
-    server_note.modified = 1234
+    server_note.update_modified()
     requests_mock.post(
         f'https://{notes_api.hostname}/index.php/apps/notes/api/v1/notes',
         json=server_note.to_dict(),
@@ -185,7 +185,7 @@ def test_notes_api_update_note(
 
     # Server updates this
     server_note = random_note
-    server_note.modified = 1234
+    server_note.update_modified()
 
     requests_mock.put(
         f'https://{notes_api.hostname}/index.php/apps/notes/api/v1/notes/{random_note.id}',
@@ -201,7 +201,7 @@ def test_notes_api_update_note_id_not_set(
     random_note.id = None
     # Server updates this
     server_note = random_note
-    server_note.modified = 1234
+    server_note.update_modified()
 
     requests_mock.put(
         f'https://{notes_api.hostname}/index.php/apps/notes/api/v1/notes/{random_note.id}',

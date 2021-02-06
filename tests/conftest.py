@@ -16,7 +16,7 @@ def _random_note() -> Note:
         'category': random_str(),
         'favorite': choice([True, False]),
         'id': randint(0, 10_000),
-        'modified': randint(0, 10_000),
+        'modified': float(randint(0, 10_000)),
     }
 
     # All attributes are optional

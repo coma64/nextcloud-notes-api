@@ -20,7 +20,7 @@ A [Nextcloud Notes](https://github.com/nextcloud/notes) API wrapper
 ## Todo
 
 - [x] fix typehints
-- [ ] store datetime object instead of float in Note.modified
+- [x] store datetime object instead of float in Note.modified
 - [ ] add license
 - [x] remove Note.from_dict and use init with keyword args instead
 - [x] add NotesApi docs

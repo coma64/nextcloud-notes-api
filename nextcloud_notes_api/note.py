@@ -15,6 +15,7 @@ class Note:
         favorite: Optional[bool] = False,
         id: Optional[int] = None,
         modified: Optional[float] = None,
+        modified_datetime: Optional[datetime] = None,
         generate_modified: Optional[bool] = False,
         **_: Optional[Any],
     ):
@@ -26,9 +27,9 @@ class Note:
             category (str, optional): Note category. Defaults to ''
             favorite (bool, optional): Whether the note is marked as a favorite. Defaults to False
             id (int, optional): A unique note id. Defaults to None
-            modified (int, optional): When the note has last been modified. Defaults to None.
-            generate_modified (bool, optional): Whether`Note.modified` should be set to the
-                current time. Defaults to False.
+            modified (float, optional): When the note has last been modified as posix timestamp. Defaults to None
+            modified_datetime (datetime, optional): When the note has last been modified as datetime object, preferred over `modified`. Defaults to None
+            generate_modified (bool, optional): Whether `Note.modified` should be set to the current time. Defaults to False
             _(Any, optional): Discard unused keyword arguments
         """
         self.title = title
@@ -41,14 +42,20 @@ class Note:
         """bool: Whether the note is marked as a favorite"""
         self.id = id
         """int: A unique note id"""
-        self.modified = modified
-        """int: When the note has last been modified"""
+        self.modified = (
+            datetime.fromtimestamp(modified)
+            if not modified_datetime and modified
+            else modified_datetime
+        )
+        """datetime: When the note has last been modified"""
 
         if generate_modified:
             self.update_modified()
 
     def to_dict(self) -> Dict[str, Any]:
         """Generate `dict` from this class
+
+        `Note.modified` is converted to a posix timestamp
 
         Returns:
             Dict[str, Any]: A `dict` containing the attributes of this class
@@ -59,34 +66,8 @@ class Note:
             'category': self.category,
             'favorite': self.favorite,
             'id': self.id,
-            'modified': self.modified,
+            'modified': self.modified.timestamp() if self.modified else None,
         }
-
-    def modified_to_datetime(self) -> datetime:
-        """Convert the unix timestamp `Note.modified` to a `datetime` object
-
-        Returns:
-            datetime: A `datetime` object representing `Note.modified`
-        """
-        if not self.modified:
-            raise ValueError(f'Modified timestamp not set: {self}')
-
-        return datetime.fromtimestamp(self.modified)
-
-    def modified_to_str(self, format: str = '%Y-%m-%d %H:%M:%S') -> str:
-        """Convert the unix timestamp `Note.modified` to a `str` with format `format`
-
-        Args:
-            format (str): The format string supplied to `datetime.strftime()`. Defaults to
-                '%Y-%m-%d %H:%M:%S'
-
-        Returns:
-            str: A `str` representing `Note.modified`
-        """
-        if not self.modified:
-            raise ValueError(f'Modified timestamp not set: {self}')
-
-        return datetime.fromtimestamp(self.modified).strftime(format)
 
     def update_modified(self, dt: datetime = None) -> None:
         """Set `Note.modified` to `dt`
@@ -96,9 +77,9 @@ class Note:
                 `datetime.now()`
         """
         if dt:
-            self.modified = dt.timestamp()
+            self.modified = dt
         else:
-            self.modified = datetime.now().timestamp()
+            self.modified = datetime.now()
 
     def __eq__(self, other: Note) -> bool:
         return self.to_dict() == other.to_dict()
@@ -109,5 +90,5 @@ class Note:
     def __str__(self) -> str:
         elements = self.to_dict()
         if self.modified:
-            elements['modified'] = self.modified_to_str()
+            elements['modified'] = str(self.modified)
         return f'Note[{elements}]'
