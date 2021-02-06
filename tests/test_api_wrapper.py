@@ -159,7 +159,6 @@ def test_notes_api_create_note(
 @pytest.mark.parametrize(
     'status_code, expectation',
     [
-        (400, pytest.raises(InvalidNoteId)),
         (401, pytest.raises(InvalidNextcloudCredentials)),
         (507, pytest.raises(InsufficientNextcloudStorage)),
     ],

@@ -149,31 +149,25 @@ class NotesApi:
             Note: Created note with `note.id` and `note.modified` set
 
         Raises:
-            InvalidNoteId: `note.id` invalid - don't actually know the purpose of this
             InvalidNextcloudCredentials: Credentials invalid
             InsufficientNextcloudStorage: Not enough storage to save `note`
         """
-        data = note.to_dict()
-        if 'id' in data:
-            del data['id']
-
         response = post(
             f'https://{self.hostname}/index.php/apps/notes/api/v1/notes',
             auth=self.auth_pair,
             headers=self.common_headers,
-            data=data,
+            data=note.to_dict(),
         )
 
-        if response.status_code == 200:
-            return Note(**response.json())
-        elif response.status_code == 400:
-            raise InvalidNoteId(note.id, self.hostname)
-        elif response.status_code == 401:
+        # Getting a status 400 is impossible since the note id is ignored by the server, although specified by the api docs
+        if response.status_code == 401:
             raise InvalidNextcloudCredentials(
                 self.username, self.password, self.hostname
             )
         elif response.status_code == 507:
             raise InsufficientNextcloudStorage(self.hostname, note)
+
+        return Note(**response.json())
 
     def update_note(self, note: Note) -> Note:
         """Update `note`
