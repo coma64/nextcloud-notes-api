@@ -49,8 +49,8 @@ class NotesApi:
         self.common_headers = {'OCS-APIRequest': 'true', 'Accept': 'application/json'}
 
     @property
-    def auth_pair(self) -> Tuple[str]:
-        """Tuple[str]: Tuple of `NotesApi.username` and `NotesApi.password`"""
+    def auth_pair(self) -> Tuple[str, str]:
+        """Tuple[str, str]: Tuple of `NotesApi.username` and `NotesApi.password`"""
         return (self.username, self.password)
 
     def get_api_version(self) -> str:
@@ -87,22 +87,24 @@ class NotesApi:
             headers=headers,
         )
 
-        if response.status_code == 200 and self.etag_caching:
+        if response.status_code == 401:
+            raise InvalidNextcloudCredentials(
+                self.username, self.password, self.hostname
+            )
+
+        # Cache is valid
+        if response.status_code == 304 and self.etag_caching:
+            return self._etag_cache.notes
+
+        if self.etag_caching:
             notes = [Note(**note_dict) for note_dict in response.json()]
             # Update cache
             self._etag_cache = NotesApi.EtagCache(
                 response.headers['ETag'], deepcopy(notes)
             )
             return notes
-        elif response.status_code == 200 and not self.etag_caching:
+        else:
             return (Note(**note_dict) for note_dict in response.json())
-        elif response.status_code == 304 and self.etag_caching:
-            # Cache valid
-            return self._etag_cache.notes
-        elif response.status_code == 401:
-            raise InvalidNextcloudCredentials(
-                self.username, self.password, self.hostname
-            )
 
     def get_single_note(self, note_id: int) -> Note:
         """Get note with id `note_id`
@@ -124,9 +126,7 @@ class NotesApi:
             headers=self.common_headers,
         )
 
-        if response.status_code == 200:
-            return Note(**response.json())
-        elif response.status_code == 400:
+        if response.status_code == 400:
             raise InvalidNoteId(note_id, self.hostname)
         elif response.status_code == 401:
             raise InvalidNextcloudCredentials(
@@ -134,6 +134,8 @@ class NotesApi:
             )
         elif response.status_code == 404:
             raise NoteNotFound(note_id, self.hostname)
+
+        return Note(**response.json())
 
     def create_note(self, note: Note) -> Note:
         """Create new note
@@ -202,9 +204,7 @@ class NotesApi:
             data=data,
         )
 
-        if response.status_code == 200:
-            return Note(**response.json())
-        elif response.status_code == 400:
+        if response.status_code == 400:
             raise InvalidNoteId(note.id, self.hostname)
         elif response.status_code == 401:
             raise InvalidNextcloudCredentials(
@@ -214,6 +214,8 @@ class NotesApi:
             raise NoteNotFound(note.id, self.hostname)
         elif response.status_code == 507:
             raise InsufficientNextcloudStorage(self.hostname, note)
+
+        return Note(**response.json())
 
     def delete_note(self, note_id: int):
         """Delete note with id `note_id`

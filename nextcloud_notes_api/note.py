@@ -1,5 +1,5 @@
 from __future__ import annotations
-from typing import Dict, Any
+from typing import Dict, Any, Optional
 from datetime import datetime
 
 
@@ -8,15 +8,15 @@ class Note:
 
     def __init__(
         self,
-        title: str = '',
-        content: str = '',
+        title: Optional[str] = '',
+        content: Optional[str] = '',
         *,
-        category: str = '',
-        favorite: bool = False,
-        id: int = None,
-        modified: int = None,
-        generate_modified: bool = False,
-        **_: Any,
+        category: Optional[str] = '',
+        favorite: Optional[bool] = False,
+        id: Optional[int] = None,
+        modified: Optional[float] = None,
+        generate_modified: Optional[bool] = False,
+        **_: Optional[Any],
     ):
         """See `Note.to_dict` for conversion to a dict
 
@@ -68,6 +68,9 @@ class Note:
         Returns:
             datetime: A `datetime` object representing `Note.modified`
         """
+        if not self.modified:
+            raise ValueError(f'Modified timestamp not set: {self}')
+
         return datetime.fromtimestamp(self.modified)
 
     def modified_to_str(self, format: str = '%Y-%m-%d %H:%M:%S') -> str:
@@ -80,6 +83,9 @@ class Note:
         Returns:
             str: A `str` representing `Note.modified`
         """
+        if not self.modified:
+            raise ValueError(f'Modified timestamp not set: {self}')
+
         return datetime.fromtimestamp(self.modified).strftime(format)
 
     def update_modified(self, dt: datetime = None) -> None:

@@ -112,6 +112,18 @@ def test_note_modified_to_datetime():
     assert dt == note.modified_to_datetime()
 
 
+def test_note_modified_to_datetime_raises_modified_not_set():
+    note = Note(
+        'todo',
+        'buy potatoes',
+        category='important',
+        favorite=True,
+        id=1337,
+    )
+    with pytest.raises(ValueError):
+        note.modified_to_datetime()
+
+
 def test_note_modified_to_str():
     dt = datetime.now()
     note = Note(
@@ -124,6 +136,19 @@ def test_note_modified_to_str():
     )
 
     assert note.modified_to_str() == dt.strftime('%Y-%m-%d %H:%M:%S')
+
+
+def test_note_modified_to_str_raises_modified_not_set():
+    note = Note(
+        'todo',
+        'buy potatoes',
+        category='important',
+        favorite=True,
+        id=1337,
+    )
+
+    with pytest.raises(ValueError):
+        note.modified_to_str()
 
 
 def test_note_repr():
