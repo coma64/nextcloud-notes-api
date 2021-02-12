@@ -16,7 +16,8 @@ def _random_note() -> Note:
         'category': random_str(),
         'favorite': choice([True, False]),
         'id': randint(0, 10_000),
-        'modified': float(randint(0, 10_000)),
+        # https://stackoverflow.com/questions/59199985/why-is-datetimes-timestamp-method-returning-oserror-errno-22-invalid-a
+        'modified': randint(90_000, 1_000_000),
     }
 
     # All attributes are optional

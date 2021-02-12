@@ -14,7 +14,7 @@ class Note:
         category: Optional[str] = '',
         favorite: Optional[bool] = False,
         id: Optional[int] = None,
-        modified: Optional[float] = None,
+        modified: Optional[int] = None,
         modified_datetime: Optional[datetime] = None,
         generate_modified: Optional[bool] = False,
         **_: Optional[Any],
@@ -27,7 +27,7 @@ class Note:
             category (str, optional): Note category. Defaults to ''
             favorite (bool, optional): Whether the note is marked as a favorite. Defaults to False
             id (int, optional): A unique note id. Defaults to None
-            modified (float, optional): When the note has last been modified as posix timestamp. Defaults to None
+            modified (int, optional): When the note has last been modified as int posix timestamp. Defaults to None
             modified_datetime (datetime, optional): When the note has last been modified as datetime object, preferred over `modified`. Defaults to None
             generate_modified (bool, optional): Whether `Note.modified` should be set to the current time. Defaults to False
             _(Any, optional): Discard unused keyword arguments
@@ -55,7 +55,7 @@ class Note:
     def to_dict(self) -> Dict[str, Any]:
         """Generate `dict` from this class
 
-        `Note.modified` is converted to a posix timestamp
+        `Note.modified` is converted to a int posix timestamp
 
         Returns:
             Dict[str, Any]: A `dict` containing the attributes of this class
