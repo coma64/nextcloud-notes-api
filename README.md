@@ -21,7 +21,7 @@ A [Nextcloud Notes](https://github.com/nextcloud/notes) API wrapper
 
 - [x] fix typehints
 - [x] store datetime object instead of float in Note.modified
-- [ ] add license
+- [x] add license
 - [x] remove Note.from_dict and use init with keyword args instead
 - [x] add NotesApi docs
 - [ ] update Note tests
