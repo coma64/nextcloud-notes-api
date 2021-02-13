@@ -28,8 +28,8 @@ A [Nextcloud Notes](https://github.com/nextcloud/notes) API wrapper
 - [ ] use new type hints (List -> Sequence)
 - [ ] publish to pip and readthedocs
 - [x] stricter code formatter than autopep8
-- [ ] run tests powershell / shell script
-- [ ] build docs shell script
+- [x] run tests powershell / shell script
+- [x] build docs shell script
 - [ ] usage examples
 - [x] classes
   - [x] NotesApi
