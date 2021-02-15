@@ -34,8 +34,8 @@ class NotesApi:
             username (str): Username
             password (str): Password
             hostname (str): Hostname, e. g. `google.com`
-            etag_caching (bool, optional): Whether to cache notes using http etags, if the server
-                supports it. Defaults to True.
+            etag_caching (bool, optional): Whether to cache notes using http etags, if
+                the server supports it. Defaults to True.
         """
         self.username = username
         """str: Username"""
@@ -160,7 +160,8 @@ class NotesApi:
             data=note.to_dict(),
         )
 
-        # Getting a status 400 is impossible since the note id is ignored by the server, although specified by the api docs
+        # Getting a status 400 is impossible since the note id is ignored by the
+        # server, although specified by the api docs
         if response.status_code == 401:
             raise InvalidNextcloudCredentials(
                 self.username, self.password, self.hostname

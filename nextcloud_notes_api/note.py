@@ -26,11 +26,16 @@ class Note:
             title (str, optional): Note title. Defaults to ''
             content (str, optional): Note content. Defaults to ''
             category (str, optional): Note category. Defaults to ''
-            favorite (bool, optional): Whether the note is marked as a favorite. Defaults to False
+            favorite (bool, optional): Whether the note is marked as a favorite.
+                Defaults to False
             id (int, optional): A unique note id. Defaults to None
-            modified (int, optional): When the note has last been modified as int posix timestamp. Defaults to None
-            modified_datetime (datetime, optional): When the note has last been modified as datetime object, preferred over `modified`. Defaults to None
-            generate_modified (bool, optional): Whether `Note.modified` should be set to the current time. Defaults to False
+            modified (int, optional): When the note has last been modified as int posix
+                timestamp. Defaults to None
+            modified_datetime (datetime, optional): When the note has last been
+                modified as datetime object, preferred over `modified`. Defaults to
+                None
+            generate_modified (bool, optional): Whether `Note.modified` should be set
+                to the current time. Defaults to False
             _(Any, optional): Discard unused keyword arguments
         """
         self.title = title

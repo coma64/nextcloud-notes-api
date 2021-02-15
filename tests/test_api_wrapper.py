@@ -51,7 +51,7 @@ def test_notes_api_get_all_notes(
     random_note_list = list(random_note_seq)
 
     requests_mock.get(
-        f'https://{notes_api_no_etag_caching.hostname}/index.php/apps/notes/api/v1/notes',
+        f'https://{notes_api_no_etag_caching.hostname}/index.php/apps/notes/api/v1/notes',  # noqa: E501
         json=[note.to_dict() for note in random_note_list],
     )
 
@@ -189,7 +189,7 @@ def test_notes_api_update_note(
     server_note.update_modified()
 
     requests_mock.put(
-        f'https://{notes_api.hostname}/index.php/apps/notes/api/v1/notes/{random_note.id}',
+        f'https://{notes_api.hostname}/index.php/apps/notes/api/v1/notes/{random_note.id}',  # noqa: E501
         json=server_note.to_dict(),
     )
 
@@ -205,7 +205,7 @@ def test_notes_api_update_note_id_not_set(
     server_note.update_modified()
 
     requests_mock.put(
-        f'https://{notes_api.hostname}/index.php/apps/notes/api/v1/notes/{random_note.id}',
+        f'https://{notes_api.hostname}/index.php/apps/notes/api/v1/notes/{random_note.id}',  # noqa: E501
         json=server_note.to_dict(),
     )
 
@@ -232,7 +232,7 @@ def test_notes_api_update_note_response_status_exceptions(
     random_note.id = 1337
 
     requests_mock.put(
-        f'https://{notes_api.hostname}/index.php/apps/notes/api/v1/notes/{random_note.id}',
+        f'https://{notes_api.hostname}/index.php/apps/notes/api/v1/notes/{random_note.id}',  # noqa: E501
         status_code=status_code,
     )
 
