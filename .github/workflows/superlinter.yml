@@ -20,3 +20,5 @@ jobs:
           PYTHON_BLACK_CONFIG_FILE: pyproject.toml
           VALIDATE_PYTHON_ISORT: false
           VALIDATE_PYTHON_FLAKE8: false
+          VALIDATE_JSCPD: false
+          VALIDATE_JSON: false
