@@ -8,3 +8,11 @@ from .api_wrapper import NotesApi
 from .note import Note
 
 __version__ = '0.1.0'
+__all__ = [
+    'InsufficientNextcloudStorage',
+    'InvalidNextcloudCredentials',
+    'InvalidNoteId',
+    'NoteNotFound',
+    'NotesApi',
+    'Note',
+]
