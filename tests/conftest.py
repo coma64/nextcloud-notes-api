@@ -1,7 +1,8 @@
-from pytest import fixture
-from random import randint, choice, choices
+from random import choice, choices, randint
 from string import printable
 from typing import Iterator
+
+from pytest import fixture
 
 from nextcloud_notes_api import Note
 

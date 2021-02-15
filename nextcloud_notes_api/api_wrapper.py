@@ -1,15 +1,16 @@
-from requests import get, post, put, delete
-from typing import Tuple, List, Iterator, Union
-from dataclasses import dataclass, field
 from copy import deepcopy
+from dataclasses import dataclass, field
+from typing import Iterator, List, Tuple, Union
 
-from .note import Note
+from requests import delete, get, post, put
+
 from .api_exceptions import (
     InsufficientNextcloudStorage,
     InvalidNextcloudCredentials,
     InvalidNoteId,
     NoteNotFound,
 )
+from .note import Note
 
 
 class NotesApi:

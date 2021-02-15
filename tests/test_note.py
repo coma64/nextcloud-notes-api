@@ -1,5 +1,6 @@
-import pytest
 from datetime import datetime
+
+import pytest
 
 import nextcloud_notes_api
 from nextcloud_notes_api import Note

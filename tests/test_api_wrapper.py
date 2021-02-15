@@ -1,14 +1,15 @@
-import pytest
-from requests_mock.mocker import Mocker as RequestsMocker
 from typing import ContextManager, Iterator
 
+import pytest
+from requests_mock.mocker import Mocker as RequestsMocker
+
 from nextcloud_notes_api import (
-    NotesApi,
-    Note,
     InsufficientNextcloudStorage,
     InvalidNextcloudCredentials,
     InvalidNoteId,
+    Note,
     NoteNotFound,
+    NotesApi,
 )
 
 
