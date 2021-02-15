@@ -1,6 +1,6 @@
 from copy import deepcopy
 from dataclasses import dataclass, field
-from typing import Iterator, List, Tuple, Union
+from typing import Iterator, List, Sequence, Tuple, Union
 
 from requests import delete, get, post, put
 
@@ -69,11 +69,11 @@ class NotesApi:
             -1
         ]
 
-    def get_all_notes(self) -> Union[Iterator[Note], List[Note]]:
+    def get_all_notes(self) -> Union[Iterator[Note], Sequence[Note]]:
         """Get all notes
 
         Returns:
-            Union[Iterator[Note], List[Note]]: A list or iterator of all notes
+            Union[Iterator[Note], Sequence[Note]]: A sequence or iterator of all notes
 
         Raises:
             InvalidNextcloudCredentials: Invalid credentials
