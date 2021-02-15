@@ -2,22 +2,22 @@
 
 <a
   href="https://github.com/coma64/nextcloud-notes-api/actions?query=workflow%3ATest"
-  target="_blank" style="float: left; margin-right:1rem;">
+  target="_blank" style="float: left; margin-right: 1rem;">
 <img src="https://github.com/coma64/nextcloud-notes-api/workflows/Test/badge.svg"
-    alt="Test">
+    alt="Test" style="display: inline;">
 </a>
 
 <a
   href="https://github.com/coma64/nextcloud-notes-api/actions?query=workflow%3ASuper-Linter"
   target="_blank" style="float: left; margin-right:1rem;">
 <img src="https://github.com/coma64/nextcloud-notes-api/workflows/Super-Linter/badge.svg"
-    alt="Test">
+    alt="Test" style="display: inline;">
 </a>
 
 <a href="https://codecov.io/gh/coma64/nextcloud-notes-api" target="_blank">
 <img
 src="https://img.shields.io/codecov/c/github/coma64/nextcloud-notes-api?color=%2334D058"
-alt="Coverage">
+alt="Coverage" style="display: inline;">
 </a>
 <br />
 
