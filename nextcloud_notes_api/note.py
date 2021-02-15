@@ -9,32 +9,32 @@ class Note:
 
     def __init__(
         self,
-        title: Optional[str] = '',
-        content: Optional[str] = '',
+        title: Optional[str] = None,
+        content: Optional[str] = None,
         *,
-        category: Optional[str] = '',
-        favorite: Optional[bool] = False,
+        category: Optional[str] = None,
+        favorite: Optional[bool] = None,
         id: Optional[int] = None,
         modified: Optional[int] = None,
         modified_datetime: Optional[datetime] = None,
-        generate_modified: Optional[bool] = False,
+        generate_modified: bool = False,
         **_: Optional[Any],
     ):
         """See `Note.to_dict` for conversion to a dict
 
         Args:
-            title (str, optional): Note title. Defaults to ''
-            content (str, optional): Note content. Defaults to ''
-            category (str, optional): Note category. Defaults to ''
+            title (str, optional): Note title. Defaults to None
+            content (str, optional): Note content. Defaults to None
+            category (str, optional): Note category. Defaults to None
             favorite (bool, optional): Whether the note is marked as a favorite.
-                Defaults to False
+                Defaults to None
             id (int, optional): A unique note id. Defaults to None
             modified (int, optional): When the note has last been modified as int posix
                 timestamp. Defaults to None
             modified_datetime (datetime, optional): When the note has last been
                 modified as datetime object, preferred over `modified`. Defaults to
                 None
-            generate_modified (bool, optional): Whether `Note.modified` should be set
+            generate_modified (bool): Whether `Note.modified` should be set
                 to the current time. Defaults to False
             _(Any, optional): Discard unused keyword arguments
         """

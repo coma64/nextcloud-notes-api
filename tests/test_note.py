@@ -125,5 +125,5 @@ def test_note_str_empty_note():
 
     assert (
         str(note)
-        == "Note[{'title': '', 'content': '', 'category': '', 'favorite': False, 'id': None, 'modified': None}]"  # noqa: E501
+        == "Note[{'title': None, 'content': None, 'category': None, 'favorite': None, 'id': None, 'modified': None}]"  # noqa: E501
     )
