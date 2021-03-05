@@ -1,8 +1,8 @@
 param([switch]$ForceRebuild = $false)
 
 if ($ForceRebuild) {
-    pdoc --html --output-dir pdoc_build nextcloud_notes_api --force
+    pdoc --html --output-dir docs nextcloud_notes_api --force
 }
 else {
-    pdoc --html --output-dir pdoc_build nextcloud_notes_api
+    pdoc --html --output-dir docs nextcloud_notes_api
 }

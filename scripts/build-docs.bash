@@ -1,3 +1,3 @@
 #!/bin/bash
 
-pdoc --html --output-dir pdoc_build nextcloud_notes_api "$@"
+pdoc --html --output-dir docs nextcloud_notes_api "$@"
