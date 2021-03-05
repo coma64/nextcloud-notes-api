@@ -42,38 +42,38 @@ def test_notes_api_get_api_version_requests_mock(
     assert '1.0' == notes_api.get_api_version()
 
 
-@pytest.mark.parametrize('random_note_seq', [4, 1, 0], indirect=['random_note_seq'])
+@pytest.mark.parametrize('example_note_gen', [4, 1, 0], indirect=['example_note_gen'])
 def test_notes_api_get_all_notes(
-    random_note_seq: Iterator[Note],
+    example_note_gen: Iterator[Note],
     notes_api_no_etag_caching: NotesApi,
     requests_mock: RequestsMocker,
 ):
-    random_note_list = list(random_note_seq)
+    example_note_list = list(example_note_gen)
 
     requests_mock.get(
         f'https://{notes_api_no_etag_caching.hostname}/index.php/apps/notes/api/v1/notes',  # noqa: E501
-        json=[note.to_dict() for note in random_note_list],
+        json=[note.to_dict() for note in example_note_list],
     )
 
     notes = notes_api_no_etag_caching.get_all_notes()
-    assert list(notes) == random_note_list
+    assert list(notes) == example_note_list
 
 
-@pytest.mark.parametrize('random_note_seq', [4, 1, 0], indirect=['random_note_seq'])
+@pytest.mark.parametrize('example_note_gen', [4, 1, 0], indirect=['example_note_gen'])
 def test_notes_api_get_all_notes_etag_cache(
-    random_note_seq: Iterator[Note], notes_api: NotesApi, requests_mock: RequestsMocker
+    example_note_gen: Iterator[Note], notes_api: NotesApi, requests_mock: RequestsMocker
 ):
-    random_note_list = list(random_note_seq)
+    example_note_list = list(example_note_gen)
 
     requests_mock.get(
         f'https://{notes_api.hostname}/index.php/apps/notes/api/v1/notes',
-        json=[note.to_dict() for note in random_note_list],
+        json=[note.to_dict() for note in example_note_list],
         headers={'ETag': 'some hash'},
     )
 
     notes = notes_api.get_all_notes()
 
-    assert list(notes) == random_note_list
+    assert list(notes) == example_note_list
 
     # This time it should return the cached notes
     with RequestsMocker() as cache_requests_mock:
@@ -84,7 +84,7 @@ def test_notes_api_get_all_notes_etag_cache(
         )
         notes = notes_api.get_all_notes()
 
-        assert list(notes) == random_note_list
+        assert list(notes) == example_note_list
 
 
 @pytest.mark.parametrize(
@@ -106,14 +106,14 @@ def test_notes_api_get_all_notes_response_status_exceptions(
 
 
 def test_notes_api_get_single_note(
-    random_note: Note, notes_api: NotesApi, requests_mock: RequestsMocker
+    example_note: Note, notes_api: NotesApi, requests_mock: RequestsMocker
 ):
     requests_mock.get(
         f'https://{notes_api.hostname}/index.php/apps/notes/api/v1/notes/1337',
-        json=random_note.to_dict(),
+        json=example_note.to_dict(),
     )
 
-    assert notes_api.get_single_note(1337) == random_note
+    assert notes_api.get_single_note(1337) == example_note
 
 
 @pytest.mark.parametrize(
@@ -140,13 +140,13 @@ def test_notes_api_get_single_note_response_status_exceptions(
 
 
 def test_notes_api_create_note(
-    random_note: Note, notes_api: NotesApi, requests_mock: RequestsMocker
+    example_note: Note, notes_api: NotesApi, requests_mock: RequestsMocker
 ):
     # Server sets this
-    random_note.id = None
-    random_note.modified = None
+    example_note.id = None
+    example_note.modified = None
 
-    server_note = random_note
+    server_note = example_note
     server_note.id = 1337
     server_note.update_modified()
     requests_mock.post(
@@ -154,7 +154,7 @@ def test_notes_api_create_note(
         json=server_note.to_dict(),
     )
 
-    assert notes_api.create_note(random_note) == server_note
+    assert notes_api.create_note(example_note) == server_note
 
 
 @pytest.mark.parametrize(
@@ -180,37 +180,37 @@ def test_notes_api_create_note_response_status_exceptions(
 
 
 def test_notes_api_update_note(
-    random_note: Note, notes_api: NotesApi, requests_mock: RequestsMocker
+    example_note: Note, notes_api: NotesApi, requests_mock: RequestsMocker
 ):
-    random_note.id = 1337
+    example_note.id = 1337
 
     # Server updates this
-    server_note = random_note
+    server_note = example_note
     server_note.update_modified()
 
     requests_mock.put(
-        f'https://{notes_api.hostname}/index.php/apps/notes/api/v1/notes/{random_note.id}',  # noqa: E501
+        f'https://{notes_api.hostname}/index.php/apps/notes/api/v1/notes/{example_note.id}',  # noqa: E501
         json=server_note.to_dict(),
     )
 
-    assert notes_api.update_note(random_note) == server_note
+    assert notes_api.update_note(example_note) == server_note
 
 
 def test_notes_api_update_note_id_not_set(
-    random_note: Note, notes_api: NotesApi, requests_mock: RequestsMocker
+    example_note: Note, notes_api: NotesApi, requests_mock: RequestsMocker
 ):
-    random_note.id = None
+    example_note.id = None
     # Server updates this
-    server_note = random_note
+    server_note = example_note
     server_note.update_modified()
 
     requests_mock.put(
-        f'https://{notes_api.hostname}/index.php/apps/notes/api/v1/notes/{random_note.id}',  # noqa: E501
+        f'https://{notes_api.hostname}/index.php/apps/notes/api/v1/notes/{example_note.id}',  # noqa: E501
         json=server_note.to_dict(),
     )
 
     with pytest.raises(ValueError):
-        assert notes_api.update_note(random_note) == server_note
+        assert notes_api.update_note(example_note) == server_note
 
 
 @pytest.mark.parametrize(
@@ -225,19 +225,19 @@ def test_notes_api_update_note_id_not_set(
 def test_notes_api_update_note_response_status_exceptions(
     status_code: int,
     expectation: ContextManager,
-    random_note: Note,
+    example_note: Note,
     notes_api: NotesApi,
     requests_mock: RequestsMocker,
 ):
-    random_note.id = 1337
+    example_note.id = 1337
 
     requests_mock.put(
-        f'https://{notes_api.hostname}/index.php/apps/notes/api/v1/notes/{random_note.id}',  # noqa: E501
+        f'https://{notes_api.hostname}/index.php/apps/notes/api/v1/notes/{example_note.id}',  # noqa: E501
         status_code=status_code,
     )
 
     with expectation:
-        notes_api.update_note(random_note)
+        notes_api.update_note(example_note)
 
 
 def test_notes_api_delete_note(notes_api: NotesApi, requests_mock: RequestsMocker):

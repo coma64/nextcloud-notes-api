@@ -83,25 +83,25 @@ def test_note_to_dict():
     assert note_dict == note.to_dict()
 
 
-def test_note_update_modified(random_note: Note, monkeypatch):
+def test_note_update_modified(example_note: Note, monkeypatch):
     dt = datetime.now()
     monkeypatch.setattr(nextcloud_notes_api.note, 'datetime', DatetimeNowMock(dt))
 
-    random_note.update_modified()
+    example_note.update_modified()
 
-    assert random_note.modified == dt
+    assert example_note.modified == dt
 
 
-def test_note_update_modified_user_timestamp(random_note: Note):
+def test_note_update_modified_user_timestamp(example_note: Note):
     dt = datetime.now()
 
-    random_note.update_modified(dt)
+    example_note.update_modified(dt)
 
-    assert random_note.modified == dt
+    assert example_note.modified == dt
 
 
-def test_note_repr(random_note: Note):
-    assert repr(random_note) == f'<Note [{random_note.id}]>'
+def test_note_repr(example_note: Note):
+    assert repr(example_note) == f'<Note [{example_note.id}]>'
 
 
 def test_note_str():

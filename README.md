@@ -32,7 +32,7 @@ A [Nextcloud Notes](https://github.com/nextcloud/notes) API wrapper
 - [x] add license
 - [x] remove Note.from_dict and use init with keyword args instead
 - [x] add NotesApi docs
-- [ ] update Note tests
+- [x] update Note tests
 - [x] use generic type hints (List -> Sequence)
 - [ ] publish to pip and readthedocs
 - [x] stricter code formatter than autopep8
