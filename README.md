@@ -4,7 +4,7 @@
 [![Super-Linter](https://github.com/coma64/nextcloud-notes-api/workflows/Super-Linter/badge.svg)](https://github.com/coma64/nextcloud-notes-api/actions?query=workflow%3ASuper-Linter)
 [![Coverage](https://img.shields.io/codecov/c/github/coma64/nextcloud-notes-api?color=%2334D058)](https://codecov.io/gh/coma64/nextcloud-notes-api)
 
-A [Nextcloud Notes App](https://github.com/nextcloud/notes) API wrapper
+A [Nextcloud Notes app](https://github.com/nextcloud/notes) API wrapper
 
 ```py
 from nextcloud_notes_api import NotesApi, Note
