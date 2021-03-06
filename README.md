@@ -38,3 +38,7 @@ Please make sure to update tests and documentation as appropriate.
 ## License
 
 [MIT](https://choosealicense.com/licenses/mit/)
+
+## Todo
+
+- Lazy note list with fuzzy searching through all notes
