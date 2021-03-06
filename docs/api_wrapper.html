@@ -42,14 +42,11 @@ from .note import Note
 
 
 class NotesApi:
-    &#34;&#34;&#34;Wraps the Nextcloud Notes App api
-
-    https://github.com/nextcloud/notes/blob/master/docs/api/v1.md
-    &#34;&#34;&#34;
+    &#34;&#34;&#34;Wraps the [Nextcloud Notes app API](https://github.com/nextcloud/notes/blob/master/docs/api/v1.md).&#34;&#34;&#34;  # noqa: E501
 
     @dataclass
     class EtagCache:
-        &#34;&#34;&#34;Convenience class for caching notes using http etags&#34;&#34;&#34;
+        &#34;&#34;&#34;Convenience class for caching notes using HTTP ETags.&#34;&#34;&#34;
 
         etag: str = &#39;&#39;
         notes: List[Note] = field(default_factory=list)
@@ -59,38 +56,38 @@ class NotesApi:
     ):
         &#34;&#34;&#34;
         Args:
-            username (str): Username
-            password (str): Password
-            hostname (str): Hostname, e. g. `google.com`
-            etag_caching (bool, optional): Whether to cache notes using http etags, if
+            username (str): Nextcloud username.
+            password (str): Nextcloud password.
+            hostname (str): Nextcloud hostname.
+            etag_caching (bool, optional): Whether to cache notes using HTTP ETags, if
                 the server supports it. Defaults to True.
         &#34;&#34;&#34;
         self.username = username
-        &#34;&#34;&#34;str: Username&#34;&#34;&#34;
+        &#34;&#34;&#34;`str`: Nextcloud username.&#34;&#34;&#34;
         self.password = password
-        &#34;&#34;&#34;str: Password&#34;&#34;&#34;
+        &#34;&#34;&#34;`str`: Nextcloud password.&#34;&#34;&#34;
         self.hostname = hostname
-        &#34;&#34;&#34;str: Hostname&#34;&#34;&#34;
+        &#34;&#34;&#34;`str`: Nextcloud hostname.&#34;&#34;&#34;
         self.etag_caching = etag_caching
-        &#34;&#34;&#34;bool: Whether to cache notes using http etags&#34;&#34;&#34;
+        &#34;&#34;&#34;`bool`: Whether to cache notes using HTTP ETags.&#34;&#34;&#34;
 
         self._etag_cache = NotesApi.EtagCache()
-        self.common_headers = {&#39;OCS-APIRequest&#39;: &#39;true&#39;, &#39;Accept&#39;: &#39;application/json&#39;}
+        self._common_headers = {&#39;OCS-APIRequest&#39;: &#39;true&#39;, &#39;Accept&#39;: &#39;application/json&#39;}
 
     @property
     def auth_pair(self) -&gt; Tuple[str, str]:
-        &#34;&#34;&#34;Tuple[str, str]: Tuple of `NotesApi.username` and `NotesApi.password`&#34;&#34;&#34;
+        &#34;&#34;&#34;Tuple[str, str]: Tuple of `NotesApi.username` and `NotesApi.password`.&#34;&#34;&#34;
         return (self.username, self.password)
 
     def get_api_version(self) -&gt; str:
         &#34;&#34;&#34;
         Returns:
-            str: Highest supported Notes app api version by Nextcloud server
+            str: Highest supported Notes app api version.
         &#34;&#34;&#34;
         response = get(
             f&#39;https://{self.hostname}/ocs/v2.php/cloud/capabilities&#39;,
             auth=self.auth_pair,
-            headers=self.common_headers,
+            headers=self._common_headers,
         )
 
         return response.json()[&#39;ocs&#39;][&#39;data&#39;][&#39;capabilities&#39;][&#39;notes&#39;][&#39;api_version&#39;][
@@ -98,15 +95,16 @@ class NotesApi:
         ]
 
     def get_all_notes(self) -&gt; Union[Iterator[Note], Sequence[Note]]:
-        &#34;&#34;&#34;Get all notes
+        &#34;&#34;&#34;Fetch all notes.
 
         Returns:
-            Union[Iterator[Note], Sequence[Note]]: A sequence or iterator of all notes
+            Union[Iterator[Note], Sequence[Note]]: A `typing.Iterator` or
+                `collections.abc.Sequence` of all notes.
 
         Raises:
-            InvalidNextcloudCredentials: Invalid credentials
+            InvalidNextcloudCredentials: Invalid credentials supplied.
         &#34;&#34;&#34;
-        headers = self.common_headers
+        headers = self._common_headers
         if self.etag_caching:
             headers[&#39;If-None-Match&#39;] = self._etag_cache.etag
 
@@ -136,23 +134,23 @@ class NotesApi:
             return (Note(**note_dict) for note_dict in response.json())
 
     def get_single_note(self, note_id: int) -&gt; Note:
-        &#34;&#34;&#34;Get note with id `note_id`
+        &#34;&#34;&#34;Retrieve note with ID `note_id`.
 
         Args:
-            note_id (int): Which note to get
+            note_id (int): ID of note to retrieve.
 
         Returns:
-            Note: Note with id `note_id`
+            Note: Note with id `note_id`.
 
         Raises:
-            InvalidNoteId: `note_id` invalid
-            InvalidNextcloudCredentials: Credentials invalid
-            NoteNotFound: Note with id `note_id` doesn&#39;t exist
+            InvalidNoteId: `note_id` is an invalid ID.
+            InvalidNextcloudCredentials: Invalid credentials supplied.
+            NoteNotFound: Note with id `note_id` doesn&#39;t exist.
         &#34;&#34;&#34;
         response = get(
             f&#39;https://{self.hostname}/index.php/apps/notes/api/v1/notes/{note_id}&#39;,
             auth=self.auth_pair,
-            headers=self.common_headers,
+            headers=self._common_headers,
         )
 
         if response.status_code == 400:
@@ -167,24 +165,24 @@ class NotesApi:
         return Note(**response.json())
 
     def create_note(self, note: Note) -&gt; Note:
-        &#34;&#34;&#34;Create new note
+        &#34;&#34;&#34;Create new note.
 
-        `note.id` and `note.modified` are set by the server
+        `Note.id` and `Note.modified` are set by the server.
 
         Args:
-            note (Note): Note to create
+            note (Note): Note to create.
 
         Returns:
-            Note: Created note with `note.id` and `note.modified` set
+            Note: Created note with `Note.id` and `Note.modified` set.
 
         Raises:
-            InvalidNextcloudCredentials: Credentials invalid
-            InsufficientNextcloudStorage: Not enough storage to save `note`
+            InvalidNextcloudCredentials: Invalid credentials supplied.
+            InsufficientNextcloudStorage: Not enough storage to save `note`.
         &#34;&#34;&#34;
         response = post(
             f&#39;https://{self.hostname}/index.php/apps/notes/api/v1/notes&#39;,
             auth=self.auth_pair,
-            headers=self.common_headers,
+            headers=self._common_headers,
             data=note.to_dict(),
         )
 
@@ -200,20 +198,21 @@ class NotesApi:
         return Note(**response.json())
 
     def update_note(self, note: Note) -&gt; Note:
-        &#34;&#34;&#34;Update `note`
+        &#34;&#34;&#34;Update `note`.
 
         Args:
-            note (Note): New note, `note.id` has to be the id of the note to be replaced
+            note (Note): New note, `Note.id` has to match the ID of the note to be
+                replaced.
 
         Returns:
-            Note: Updated note with new `note.modified`
+            Note: Updated note with new `Note.modified`.
 
         Raises:
-            ValueError: `note.id` not set
-            InvalidNoteId: `note.id` invalid
-            InvalidNextcloudCredentials: Credentials invalid
-            NoteNotFound: Note with id `note.id` doesn&#39;t exist
-            InsufficientNextcloudStorage: Not enough storage to save `note`
+            ValueError: `Note.id` is not set.
+            InvalidNoteId: `Note.id` is an invalid ID.
+            InvalidNextcloudCredentials: Invalid credentials supplied.
+            NoteNotFound: Note with id `Note.id` doesn&#39;t exist.
+            InsufficientNextcloudStorage: Not enough storage to save `note`.
         &#34;&#34;&#34;
         if not note.id:
             raise ValueError(f&#39;Note id not set {note}&#39;)
@@ -224,7 +223,7 @@ class NotesApi:
         response = put(
             f&#39;https://{self.hostname}/index.php/apps/notes/api/v1/notes/{note.id}&#39;,
             auth=self.auth_pair,
-            headers=self.common_headers,
+            headers=self._common_headers,
             data=data,
         )
 
@@ -242,20 +241,20 @@ class NotesApi:
         return Note(**response.json())
 
     def delete_note(self, note_id: int):
-        &#34;&#34;&#34;Delete note with id `note_id`
+        &#34;&#34;&#34;Delete note with ID `note_id`.
 
         Args:
-            note_id (int): Id of note to delete
+            note_id (int): ID of note to delete
 
         Raises:
-            InvalidNoteId: `note_id` invalid
-            InvalidNextcloudCredentials: Credentials invalid
-            NoteNotFound: Note with id `note_id` doesn&#39;t exist
+            InvalidNoteId: `note_id` is an invalid ID.
+            InvalidNextcloudCredentials: Invalid credentials supplied.
+            NoteNotFound: Note with id `note_id` doesn&#39;t exist.
         &#34;&#34;&#34;
         response = delete(
             f&#39;https://{self.hostname}/index.php/apps/notes/api/v1/notes/{note_id}&#39;,
             auth=self.auth_pair,
-            headers=self.common_headers,
+            headers=self._common_headers,
         )
 
         if response.status_code == 400:
@@ -285,18 +284,17 @@ class NotesApi:
 <span>(</span><span>username: str, password: str, hostname: str, *, etag_caching: bool = True)</span>
 </code></dt>
 <dd>
-<div class="desc"><p>Wraps the Nextcloud Notes App api</p>
-<p><a href="https://github.com/nextcloud/notes/blob/master/docs/api/v1.md">https://github.com/nextcloud/notes/blob/master/docs/api/v1.md</a></p>
+<div class="desc"><p>Wraps the <a href="https://github.com/nextcloud/notes/blob/master/docs/api/v1.md">Nextcloud Notes app API</a>.</p>
 <h2 id="args">Args</h2>
 <dl>
 <dt><strong><code>username</code></strong> :&ensp;<code>str</code></dt>
-<dd>Username</dd>
+<dd>Nextcloud username.</dd>
 <dt><strong><code>password</code></strong> :&ensp;<code>str</code></dt>
-<dd>Password</dd>
+<dd>Nextcloud password.</dd>
 <dt><strong><code>hostname</code></strong> :&ensp;<code>str</code></dt>
-<dd>Hostname, e. g. <code>google.com</code></dd>
+<dd>Nextcloud hostname.</dd>
 <dt><strong><code>etag_caching</code></strong> :&ensp;<code>bool</code>, optional</dt>
-<dd>Whether to cache notes using http etags, if
+<dd>Whether to cache notes using HTTP ETags, if
 the server supports it. Defaults to True.</dd>
 </dl></div>
 <details class="source">
@@ -304,14 +302,11 @@ the server supports it. Defaults to True.</dd>
 <span>Expand source code</span>
 </summary>
 <pre><code class="python">class NotesApi:
-    &#34;&#34;&#34;Wraps the Nextcloud Notes App api
-
-    https://github.com/nextcloud/notes/blob/master/docs/api/v1.md
-    &#34;&#34;&#34;
+    &#34;&#34;&#34;Wraps the [Nextcloud Notes app API](https://github.com/nextcloud/notes/blob/master/docs/api/v1.md).&#34;&#34;&#34;  # noqa: E501
 
     @dataclass
     class EtagCache:
-        &#34;&#34;&#34;Convenience class for caching notes using http etags&#34;&#34;&#34;
+        &#34;&#34;&#34;Convenience class for caching notes using HTTP ETags.&#34;&#34;&#34;
 
         etag: str = &#39;&#39;
         notes: List[Note] = field(default_factory=list)
@@ -321,38 +316,38 @@ the server supports it. Defaults to True.</dd>
     ):
         &#34;&#34;&#34;
         Args:
-            username (str): Username
-            password (str): Password
-            hostname (str): Hostname, e. g. `google.com`
-            etag_caching (bool, optional): Whether to cache notes using http etags, if
+            username (str): Nextcloud username.
+            password (str): Nextcloud password.
+            hostname (str): Nextcloud hostname.
+            etag_caching (bool, optional): Whether to cache notes using HTTP ETags, if
                 the server supports it. Defaults to True.
         &#34;&#34;&#34;
         self.username = username
-        &#34;&#34;&#34;str: Username&#34;&#34;&#34;
+        &#34;&#34;&#34;`str`: Nextcloud username.&#34;&#34;&#34;
         self.password = password
-        &#34;&#34;&#34;str: Password&#34;&#34;&#34;
+        &#34;&#34;&#34;`str`: Nextcloud password.&#34;&#34;&#34;
         self.hostname = hostname
-        &#34;&#34;&#34;str: Hostname&#34;&#34;&#34;
+        &#34;&#34;&#34;`str`: Nextcloud hostname.&#34;&#34;&#34;
         self.etag_caching = etag_caching
-        &#34;&#34;&#34;bool: Whether to cache notes using http etags&#34;&#34;&#34;
+        &#34;&#34;&#34;`bool`: Whether to cache notes using HTTP ETags.&#34;&#34;&#34;
 
         self._etag_cache = NotesApi.EtagCache()
-        self.common_headers = {&#39;OCS-APIRequest&#39;: &#39;true&#39;, &#39;Accept&#39;: &#39;application/json&#39;}
+        self._common_headers = {&#39;OCS-APIRequest&#39;: &#39;true&#39;, &#39;Accept&#39;: &#39;application/json&#39;}
 
     @property
     def auth_pair(self) -&gt; Tuple[str, str]:
-        &#34;&#34;&#34;Tuple[str, str]: Tuple of `NotesApi.username` and `NotesApi.password`&#34;&#34;&#34;
+        &#34;&#34;&#34;Tuple[str, str]: Tuple of `NotesApi.username` and `NotesApi.password`.&#34;&#34;&#34;
         return (self.username, self.password)
 
     def get_api_version(self) -&gt; str:
         &#34;&#34;&#34;
         Returns:
-            str: Highest supported Notes app api version by Nextcloud server
+            str: Highest supported Notes app api version.
         &#34;&#34;&#34;
         response = get(
             f&#39;https://{self.hostname}/ocs/v2.php/cloud/capabilities&#39;,
             auth=self.auth_pair,
-            headers=self.common_headers,
+            headers=self._common_headers,
         )
 
         return response.json()[&#39;ocs&#39;][&#39;data&#39;][&#39;capabilities&#39;][&#39;notes&#39;][&#39;api_version&#39;][
@@ -360,15 +355,16 @@ the server supports it. Defaults to True.</dd>
         ]
 
     def get_all_notes(self) -&gt; Union[Iterator[Note], Sequence[Note]]:
-        &#34;&#34;&#34;Get all notes
+        &#34;&#34;&#34;Fetch all notes.
 
         Returns:
-            Union[Iterator[Note], Sequence[Note]]: A sequence or iterator of all notes
+            Union[Iterator[Note], Sequence[Note]]: A `typing.Iterator` or
+                `collections.abc.Sequence` of all notes.
 
         Raises:
-            InvalidNextcloudCredentials: Invalid credentials
+            InvalidNextcloudCredentials: Invalid credentials supplied.
         &#34;&#34;&#34;
-        headers = self.common_headers
+        headers = self._common_headers
         if self.etag_caching:
             headers[&#39;If-None-Match&#39;] = self._etag_cache.etag
 
@@ -398,23 +394,23 @@ the server supports it. Defaults to True.</dd>
             return (Note(**note_dict) for note_dict in response.json())
 
     def get_single_note(self, note_id: int) -&gt; Note:
-        &#34;&#34;&#34;Get note with id `note_id`
+        &#34;&#34;&#34;Retrieve note with ID `note_id`.
 
         Args:
-            note_id (int): Which note to get
+            note_id (int): ID of note to retrieve.
 
         Returns:
-            Note: Note with id `note_id`
+            Note: Note with id `note_id`.
 
         Raises:
-            InvalidNoteId: `note_id` invalid
-            InvalidNextcloudCredentials: Credentials invalid
-            NoteNotFound: Note with id `note_id` doesn&#39;t exist
+            InvalidNoteId: `note_id` is an invalid ID.
+            InvalidNextcloudCredentials: Invalid credentials supplied.
+            NoteNotFound: Note with id `note_id` doesn&#39;t exist.
         &#34;&#34;&#34;
         response = get(
             f&#39;https://{self.hostname}/index.php/apps/notes/api/v1/notes/{note_id}&#39;,
             auth=self.auth_pair,
-            headers=self.common_headers,
+            headers=self._common_headers,
         )
 
         if response.status_code == 400:
@@ -429,24 +425,24 @@ the server supports it. Defaults to True.</dd>
         return Note(**response.json())
 
     def create_note(self, note: Note) -&gt; Note:
-        &#34;&#34;&#34;Create new note
+        &#34;&#34;&#34;Create new note.
 
-        `note.id` and `note.modified` are set by the server
+        `Note.id` and `Note.modified` are set by the server.
 
         Args:
-            note (Note): Note to create
+            note (Note): Note to create.
 
         Returns:
-            Note: Created note with `note.id` and `note.modified` set
+            Note: Created note with `Note.id` and `Note.modified` set.
 
         Raises:
-            InvalidNextcloudCredentials: Credentials invalid
-            InsufficientNextcloudStorage: Not enough storage to save `note`
+            InvalidNextcloudCredentials: Invalid credentials supplied.
+            InsufficientNextcloudStorage: Not enough storage to save `note`.
         &#34;&#34;&#34;
         response = post(
             f&#39;https://{self.hostname}/index.php/apps/notes/api/v1/notes&#39;,
             auth=self.auth_pair,
-            headers=self.common_headers,
+            headers=self._common_headers,
             data=note.to_dict(),
         )
 
@@ -462,20 +458,21 @@ the server supports it. Defaults to True.</dd>
         return Note(**response.json())
 
     def update_note(self, note: Note) -&gt; Note:
-        &#34;&#34;&#34;Update `note`
+        &#34;&#34;&#34;Update `note`.
 
         Args:
-            note (Note): New note, `note.id` has to be the id of the note to be replaced
+            note (Note): New note, `Note.id` has to match the ID of the note to be
+                replaced.
 
         Returns:
-            Note: Updated note with new `note.modified`
+            Note: Updated note with new `Note.modified`.
 
         Raises:
-            ValueError: `note.id` not set
-            InvalidNoteId: `note.id` invalid
-            InvalidNextcloudCredentials: Credentials invalid
-            NoteNotFound: Note with id `note.id` doesn&#39;t exist
-            InsufficientNextcloudStorage: Not enough storage to save `note`
+            ValueError: `Note.id` is not set.
+            InvalidNoteId: `Note.id` is an invalid ID.
+            InvalidNextcloudCredentials: Invalid credentials supplied.
+            NoteNotFound: Note with id `Note.id` doesn&#39;t exist.
+            InsufficientNextcloudStorage: Not enough storage to save `note`.
         &#34;&#34;&#34;
         if not note.id:
             raise ValueError(f&#39;Note id not set {note}&#39;)
@@ -486,7 +483,7 @@ the server supports it. Defaults to True.</dd>
         response = put(
             f&#39;https://{self.hostname}/index.php/apps/notes/api/v1/notes/{note.id}&#39;,
             auth=self.auth_pair,
-            headers=self.common_headers,
+            headers=self._common_headers,
             data=data,
         )
 
@@ -504,20 +501,20 @@ the server supports it. Defaults to True.</dd>
         return Note(**response.json())
 
     def delete_note(self, note_id: int):
-        &#34;&#34;&#34;Delete note with id `note_id`
+        &#34;&#34;&#34;Delete note with ID `note_id`.
 
         Args:
-            note_id (int): Id of note to delete
+            note_id (int): ID of note to delete
 
         Raises:
-            InvalidNoteId: `note_id` invalid
-            InvalidNextcloudCredentials: Credentials invalid
-            NoteNotFound: Note with id `note_id` doesn&#39;t exist
+            InvalidNoteId: `note_id` is an invalid ID.
+            InvalidNextcloudCredentials: Invalid credentials supplied.
+            NoteNotFound: Note with id `note_id` doesn&#39;t exist.
         &#34;&#34;&#34;
         response = delete(
             f&#39;https://{self.hostname}/index.php/apps/notes/api/v1/notes/{note_id}&#39;,
             auth=self.auth_pair,
-            headers=self.common_headers,
+            headers=self._common_headers,
         )
 
         if response.status_code == 400:
@@ -536,39 +533,39 @@ the server supports it. Defaults to True.</dd>
 <dl>
 <dt id="nextcloud_notes_api.api_wrapper.NotesApi.EtagCache"><code class="name">var <span class="ident">EtagCache</span></code></dt>
 <dd>
-<div class="desc"><p>Convenience class for caching notes using http etags</p></div>
+<div class="desc"><p>Convenience class for caching notes using HTTP ETags.</p></div>
 </dd>
 </dl>
 <h3>Instance variables</h3>
 <dl>
 <dt id="nextcloud_notes_api.api_wrapper.NotesApi.auth_pair"><code class="name">var <span class="ident">auth_pair</span> : Tuple[str, str]</code></dt>
 <dd>
-<div class="desc"><p>Tuple[str, str]: Tuple of <code><a title="nextcloud_notes_api.api_wrapper.NotesApi.username" href="#nextcloud_notes_api.api_wrapper.NotesApi.username">NotesApi.username</a></code> and <code><a title="nextcloud_notes_api.api_wrapper.NotesApi.password" href="#nextcloud_notes_api.api_wrapper.NotesApi.password">NotesApi.password</a></code></p></div>
+<div class="desc"><p>Tuple[str, str]: Tuple of <code><a title="nextcloud_notes_api.api_wrapper.NotesApi.username" href="#nextcloud_notes_api.api_wrapper.NotesApi.username">NotesApi.username</a></code> and <code><a title="nextcloud_notes_api.api_wrapper.NotesApi.password" href="#nextcloud_notes_api.api_wrapper.NotesApi.password">NotesApi.password</a></code>.</p></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
 </summary>
 <pre><code class="python">@property
 def auth_pair(self) -&gt; Tuple[str, str]:
-    &#34;&#34;&#34;Tuple[str, str]: Tuple of `NotesApi.username` and `NotesApi.password`&#34;&#34;&#34;
+    &#34;&#34;&#34;Tuple[str, str]: Tuple of `NotesApi.username` and `NotesApi.password`.&#34;&#34;&#34;
     return (self.username, self.password)</code></pre>
 </details>
 </dd>
 <dt id="nextcloud_notes_api.api_wrapper.NotesApi.etag_caching"><code class="name">var <span class="ident">etag_caching</span></code></dt>
 <dd>
-<div class="desc"><p>bool: Whether to cache notes using http etags</p></div>
+<div class="desc"><p><code>bool</code>: Whether to cache notes using HTTP ETags.</p></div>
 </dd>
 <dt id="nextcloud_notes_api.api_wrapper.NotesApi.hostname"><code class="name">var <span class="ident">hostname</span></code></dt>
 <dd>
-<div class="desc"><p>str: Hostname</p></div>
+<div class="desc"><p><code>str</code>: Nextcloud hostname.</p></div>
 </dd>
 <dt id="nextcloud_notes_api.api_wrapper.NotesApi.password"><code class="name">var <span class="ident">password</span></code></dt>
 <dd>
-<div class="desc"><p>str: Password</p></div>
+<div class="desc"><p><code>str</code>: Nextcloud password.</p></div>
 </dd>
 <dt id="nextcloud_notes_api.api_wrapper.NotesApi.username"><code class="name">var <span class="ident">username</span></code></dt>
 <dd>
-<div class="desc"><p>str: Username</p></div>
+<div class="desc"><p><code>str</code>: Nextcloud username.</p></div>
 </dd>
 </dl>
 <h3>Methods</h3>
@@ -577,48 +574,48 @@ def auth_pair(self) -&gt; Tuple[str, str]:
 <span>def <span class="ident">create_note</span></span>(<span>self, note: <a title="nextcloud_notes_api.note.Note" href="note.html#nextcloud_notes_api.note.Note">Note</a>) ‑> <a title="nextcloud_notes_api.note.Note" href="note.html#nextcloud_notes_api.note.Note">Note</a></span>
 </code></dt>
 <dd>
-<div class="desc"><p>Create new note</p>
-<p><code>note.id</code> and <code>note.modified</code> are set by the server</p>
+<div class="desc"><p>Create new note.</p>
+<p><code>Note.id</code> and <code>Note.modified</code> are set by the server.</p>
 <h2 id="args">Args</h2>
 <dl>
 <dt><strong><code>note</code></strong> :&ensp;<code>Note</code></dt>
-<dd>Note to create</dd>
+<dd>Note to create.</dd>
 </dl>
 <h2 id="returns">Returns</h2>
 <dl>
 <dt><code>Note</code></dt>
-<dd>Created note with <code>note.id</code> and <code>note.modified</code> set</dd>
+<dd>Created note with <code>Note.id</code> and <code>Note.modified</code> set.</dd>
 </dl>
 <h2 id="raises">Raises</h2>
 <dl>
 <dt><code>InvalidNextcloudCredentials</code></dt>
-<dd>Credentials invalid</dd>
+<dd>Invalid credentials supplied.</dd>
 <dt><code>InsufficientNextcloudStorage</code></dt>
-<dd>Not enough storage to save <code>note</code></dd>
+<dd>Not enough storage to save <code>note</code>.</dd>
 </dl></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
 </summary>
 <pre><code class="python">def create_note(self, note: Note) -&gt; Note:
-    &#34;&#34;&#34;Create new note
+    &#34;&#34;&#34;Create new note.
 
-    `note.id` and `note.modified` are set by the server
+    `Note.id` and `Note.modified` are set by the server.
 
     Args:
-        note (Note): Note to create
+        note (Note): Note to create.
 
     Returns:
-        Note: Created note with `note.id` and `note.modified` set
+        Note: Created note with `Note.id` and `Note.modified` set.
 
     Raises:
-        InvalidNextcloudCredentials: Credentials invalid
-        InsufficientNextcloudStorage: Not enough storage to save `note`
+        InvalidNextcloudCredentials: Invalid credentials supplied.
+        InsufficientNextcloudStorage: Not enough storage to save `note`.
     &#34;&#34;&#34;
     response = post(
         f&#39;https://{self.hostname}/index.php/apps/notes/api/v1/notes&#39;,
         auth=self.auth_pair,
-        headers=self.common_headers,
+        headers=self._common_headers,
         data=note.to_dict(),
     )
 
@@ -638,40 +635,40 @@ def auth_pair(self) -&gt; Tuple[str, str]:
 <span>def <span class="ident">delete_note</span></span>(<span>self, note_id: int)</span>
 </code></dt>
 <dd>
-<div class="desc"><p>Delete note with id <code>note_id</code></p>
+<div class="desc"><p>Delete note with ID <code>note_id</code>.</p>
 <h2 id="args">Args</h2>
 <dl>
 <dt><strong><code>note_id</code></strong> :&ensp;<code>int</code></dt>
-<dd>Id of note to delete</dd>
+<dd>ID of note to delete</dd>
 </dl>
 <h2 id="raises">Raises</h2>
 <dl>
 <dt><code>InvalidNoteId</code></dt>
-<dd><code>note_id</code> invalid</dd>
+<dd><code>note_id</code> is an invalid ID.</dd>
 <dt><code>InvalidNextcloudCredentials</code></dt>
-<dd>Credentials invalid</dd>
+<dd>Invalid credentials supplied.</dd>
 <dt><code>NoteNotFound</code></dt>
-<dd>Note with id <code>note_id</code> doesn't exist</dd>
+<dd>Note with id <code>note_id</code> doesn't exist.</dd>
 </dl></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
 </summary>
 <pre><code class="python">def delete_note(self, note_id: int):
-    &#34;&#34;&#34;Delete note with id `note_id`
+    &#34;&#34;&#34;Delete note with ID `note_id`.
 
     Args:
-        note_id (int): Id of note to delete
+        note_id (int): ID of note to delete
 
     Raises:
-        InvalidNoteId: `note_id` invalid
-        InvalidNextcloudCredentials: Credentials invalid
-        NoteNotFound: Note with id `note_id` doesn&#39;t exist
+        InvalidNoteId: `note_id` is an invalid ID.
+        InvalidNextcloudCredentials: Invalid credentials supplied.
+        NoteNotFound: Note with id `note_id` doesn&#39;t exist.
     &#34;&#34;&#34;
     response = delete(
         f&#39;https://{self.hostname}/index.php/apps/notes/api/v1/notes/{note_id}&#39;,
         auth=self.auth_pair,
-        headers=self.common_headers,
+        headers=self._common_headers,
     )
 
     if response.status_code == 400:
@@ -688,31 +685,33 @@ def auth_pair(self) -&gt; Tuple[str, str]:
 <span>def <span class="ident">get_all_notes</span></span>(<span>self) ‑> Union[Iterator[<a title="nextcloud_notes_api.note.Note" href="note.html#nextcloud_notes_api.note.Note">Note</a>], Sequence[<a title="nextcloud_notes_api.note.Note" href="note.html#nextcloud_notes_api.note.Note">Note</a>]]</span>
 </code></dt>
 <dd>
-<div class="desc"><p>Get all notes</p>
+<div class="desc"><p>Fetch all notes.</p>
 <h2 id="returns">Returns</h2>
 <dl>
 <dt><code>Union[Iterator[Note], Sequence[Note]]</code></dt>
-<dd>A sequence or iterator of all notes</dd>
+<dd>A <code>typing.Iterator</code> or
+<code>collections.abc.Sequence</code> of all notes.</dd>
 </dl>
 <h2 id="raises">Raises</h2>
 <dl>
 <dt><code>InvalidNextcloudCredentials</code></dt>
-<dd>Invalid credentials</dd>
+<dd>Invalid credentials supplied.</dd>
 </dl></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
 </summary>
 <pre><code class="python">def get_all_notes(self) -&gt; Union[Iterator[Note], Sequence[Note]]:
-    &#34;&#34;&#34;Get all notes
+    &#34;&#34;&#34;Fetch all notes.
 
     Returns:
-        Union[Iterator[Note], Sequence[Note]]: A sequence or iterator of all notes
+        Union[Iterator[Note], Sequence[Note]]: A `typing.Iterator` or
+            `collections.abc.Sequence` of all notes.
 
     Raises:
-        InvalidNextcloudCredentials: Invalid credentials
+        InvalidNextcloudCredentials: Invalid credentials supplied.
     &#34;&#34;&#34;
-    headers = self.common_headers
+    headers = self._common_headers
     if self.etag_caching:
         headers[&#39;If-None-Match&#39;] = self._etag_cache.etag
 
@@ -749,7 +748,7 @@ def auth_pair(self) -&gt; Tuple[str, str]:
 <div class="desc"><h2 id="returns">Returns</h2>
 <dl>
 <dt><code>str</code></dt>
-<dd>Highest supported Notes app api version by Nextcloud server</dd>
+<dd>Highest supported Notes app api version.</dd>
 </dl></div>
 <details class="source">
 <summary>
@@ -758,12 +757,12 @@ def auth_pair(self) -&gt; Tuple[str, str]:
 <pre><code class="python">def get_api_version(self) -&gt; str:
     &#34;&#34;&#34;
     Returns:
-        str: Highest supported Notes app api version by Nextcloud server
+        str: Highest supported Notes app api version.
     &#34;&#34;&#34;
     response = get(
         f&#39;https://{self.hostname}/ocs/v2.php/cloud/capabilities&#39;,
         auth=self.auth_pair,
-        headers=self.common_headers,
+        headers=self._common_headers,
     )
 
     return response.json()[&#39;ocs&#39;][&#39;data&#39;][&#39;capabilities&#39;][&#39;notes&#39;][&#39;api_version&#39;][
@@ -775,48 +774,48 @@ def auth_pair(self) -&gt; Tuple[str, str]:
 <span>def <span class="ident">get_single_note</span></span>(<span>self, note_id: int) ‑> <a title="nextcloud_notes_api.note.Note" href="note.html#nextcloud_notes_api.note.Note">Note</a></span>
 </code></dt>
 <dd>
-<div class="desc"><p>Get note with id <code>note_id</code></p>
+<div class="desc"><p>Retrieve note with ID <code>note_id</code>.</p>
 <h2 id="args">Args</h2>
 <dl>
 <dt><strong><code>note_id</code></strong> :&ensp;<code>int</code></dt>
-<dd>Which note to get</dd>
+<dd>ID of note to retrieve.</dd>
 </dl>
 <h2 id="returns">Returns</h2>
 <dl>
 <dt><code>Note</code></dt>
-<dd>Note with id <code>note_id</code></dd>
+<dd>Note with id <code>note_id</code>.</dd>
 </dl>
 <h2 id="raises">Raises</h2>
 <dl>
 <dt><code>InvalidNoteId</code></dt>
-<dd><code>note_id</code> invalid</dd>
+<dd><code>note_id</code> is an invalid ID.</dd>
 <dt><code>InvalidNextcloudCredentials</code></dt>
-<dd>Credentials invalid</dd>
+<dd>Invalid credentials supplied.</dd>
 <dt><code>NoteNotFound</code></dt>
-<dd>Note with id <code>note_id</code> doesn't exist</dd>
+<dd>Note with id <code>note_id</code> doesn't exist.</dd>
 </dl></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
 </summary>
 <pre><code class="python">def get_single_note(self, note_id: int) -&gt; Note:
-    &#34;&#34;&#34;Get note with id `note_id`
+    &#34;&#34;&#34;Retrieve note with ID `note_id`.
 
     Args:
-        note_id (int): Which note to get
+        note_id (int): ID of note to retrieve.
 
     Returns:
-        Note: Note with id `note_id`
+        Note: Note with id `note_id`.
 
     Raises:
-        InvalidNoteId: `note_id` invalid
-        InvalidNextcloudCredentials: Credentials invalid
-        NoteNotFound: Note with id `note_id` doesn&#39;t exist
+        InvalidNoteId: `note_id` is an invalid ID.
+        InvalidNextcloudCredentials: Invalid credentials supplied.
+        NoteNotFound: Note with id `note_id` doesn&#39;t exist.
     &#34;&#34;&#34;
     response = get(
         f&#39;https://{self.hostname}/index.php/apps/notes/api/v1/notes/{note_id}&#39;,
         auth=self.auth_pair,
-        headers=self.common_headers,
+        headers=self._common_headers,
     )
 
     if response.status_code == 400:
@@ -835,49 +834,51 @@ def auth_pair(self) -&gt; Tuple[str, str]:
 <span>def <span class="ident">update_note</span></span>(<span>self, note: <a title="nextcloud_notes_api.note.Note" href="note.html#nextcloud_notes_api.note.Note">Note</a>) ‑> <a title="nextcloud_notes_api.note.Note" href="note.html#nextcloud_notes_api.note.Note">Note</a></span>
 </code></dt>
 <dd>
-<div class="desc"><p>Update <code>note</code></p>
+<div class="desc"><p>Update <code>note</code>.</p>
 <h2 id="args">Args</h2>
 <dl>
 <dt><strong><code>note</code></strong> :&ensp;<code>Note</code></dt>
-<dd>New note, <code>note.id</code> has to be the id of the note to be replaced</dd>
+<dd>New note, <code>Note.id</code> has to match the ID of the note to be
+replaced.</dd>
 </dl>
 <h2 id="returns">Returns</h2>
 <dl>
 <dt><code>Note</code></dt>
-<dd>Updated note with new <code>note.modified</code></dd>
+<dd>Updated note with new <code>Note.modified</code>.</dd>
 </dl>
 <h2 id="raises">Raises</h2>
 <dl>
 <dt><code>ValueError</code></dt>
-<dd><code>note.id</code> not set</dd>
+<dd><code>Note.id</code> is not set.</dd>
 <dt><code>InvalidNoteId</code></dt>
-<dd><code>note.id</code> invalid</dd>
+<dd><code>Note.id</code> is an invalid ID.</dd>
 <dt><code>InvalidNextcloudCredentials</code></dt>
-<dd>Credentials invalid</dd>
+<dd>Invalid credentials supplied.</dd>
 <dt><code>NoteNotFound</code></dt>
-<dd>Note with id <code>note.id</code> doesn't exist</dd>
+<dd>Note with id <code>Note.id</code> doesn't exist.</dd>
 <dt><code>InsufficientNextcloudStorage</code></dt>
-<dd>Not enough storage to save <code>note</code></dd>
+<dd>Not enough storage to save <code>note</code>.</dd>
 </dl></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
 </summary>
 <pre><code class="python">def update_note(self, note: Note) -&gt; Note:
-    &#34;&#34;&#34;Update `note`
+    &#34;&#34;&#34;Update `note`.
 
     Args:
-        note (Note): New note, `note.id` has to be the id of the note to be replaced
+        note (Note): New note, `Note.id` has to match the ID of the note to be
+            replaced.
 
     Returns:
-        Note: Updated note with new `note.modified`
+        Note: Updated note with new `Note.modified`.
 
     Raises:
-        ValueError: `note.id` not set
-        InvalidNoteId: `note.id` invalid
-        InvalidNextcloudCredentials: Credentials invalid
-        NoteNotFound: Note with id `note.id` doesn&#39;t exist
-        InsufficientNextcloudStorage: Not enough storage to save `note`
+        ValueError: `Note.id` is not set.
+        InvalidNoteId: `Note.id` is an invalid ID.
+        InvalidNextcloudCredentials: Invalid credentials supplied.
+        NoteNotFound: Note with id `Note.id` doesn&#39;t exist.
+        InsufficientNextcloudStorage: Not enough storage to save `note`.
     &#34;&#34;&#34;
     if not note.id:
         raise ValueError(f&#39;Note id not set {note}&#39;)
@@ -888,7 +889,7 @@ def auth_pair(self) -&gt; Tuple[str, str]:
     response = put(
         f&#39;https://{self.hostname}/index.php/apps/notes/api/v1/notes/{note.id}&#39;,
         auth=self.auth_pair,
-        headers=self.common_headers,
+        headers=self._common_headers,
         data=data,
     )
 

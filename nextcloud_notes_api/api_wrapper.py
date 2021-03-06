@@ -14,14 +14,11 @@ from .note import Note
 
 
 class NotesApi:
-    """Wraps the Nextcloud Notes App api
-
-    https://github.com/nextcloud/notes/blob/master/docs/api/v1.md
-    """
+    """Wraps the [Nextcloud Notes app API](https://github.com/nextcloud/notes/blob/master/docs/api/v1.md)."""  # noqa: E501
 
     @dataclass
     class EtagCache:
-        """Convenience class for caching notes using http etags"""
+        """Convenience class for caching notes using HTTP ETags."""
 
         etag: str = ''
         notes: List[Note] = field(default_factory=list)
@@ -31,33 +28,34 @@ class NotesApi:
     ):
         """
         Args:
-            username (str): Username
-            password (str): Password
-            hostname (str): Hostname, e. g. `google.com`
-            etag_caching (bool, optional): Whether to cache notes using http etags, if
+            username (str): Nextcloud username.
+            password (str): Nextcloud password.
+            hostname (str): Nextcloud hostname.
+            etag_caching (bool, optional): Whether to cache notes using HTTP ETags, if
                 the server supports it. Defaults to True.
         """
         self.username = username
-        """str: Username"""
+        """`str`: Nextcloud username."""
         self.password = password
-        """str: Password"""
+        """`str`: Nextcloud password."""
         self.hostname = hostname
-        """str: Hostname"""
+        """`str`: Nextcloud hostname."""
         self.etag_caching = etag_caching
-        """bool: Whether to cache notes using http etags"""
+        """`bool`: Whether to cache notes using HTTP ETags."""
 
         self._etag_cache = NotesApi.EtagCache()
+        # TODO: Make commono_headers private
         self.common_headers = {'OCS-APIRequest': 'true', 'Accept': 'application/json'}
 
     @property
     def auth_pair(self) -> Tuple[str, str]:
-        """Tuple[str, str]: Tuple of `NotesApi.username` and `NotesApi.password`"""
+        """Tuple[str, str]: Tuple of `NotesApi.username` and `NotesApi.password`."""
         return (self.username, self.password)
 
     def get_api_version(self) -> str:
         """
         Returns:
-            str: Highest supported Notes app api version by Nextcloud server
+            str: Highest supported Notes app api version.
         """
         response = get(
             f'https://{self.hostname}/ocs/v2.php/cloud/capabilities',
@@ -70,13 +68,14 @@ class NotesApi:
         ]
 
     def get_all_notes(self) -> Union[Iterator[Note], Sequence[Note]]:
-        """Get all notes
+        """Fetch all notes.
 
         Returns:
-            Union[Iterator[Note], Sequence[Note]]: A sequence or iterator of all notes
+            Union[Iterator[Note], Sequence[Note]]: A `typing.Iterator` or
+                `collections.abc.Sequence` of all notes.
 
         Raises:
-            InvalidNextcloudCredentials: Invalid credentials
+            InvalidNextcloudCredentials: Invalid credentials supplied.
         """
         headers = self.common_headers
         if self.etag_caching:
@@ -108,18 +107,18 @@ class NotesApi:
             return (Note(**note_dict) for note_dict in response.json())
 
     def get_single_note(self, note_id: int) -> Note:
-        """Get note with id `note_id`
+        """Retrieve note with ID `note_id`.
 
         Args:
-            note_id (int): Which note to get
+            note_id (int): ID of note to retrieve.
 
         Returns:
-            Note: Note with id `note_id`
+            Note: Note with id `note_id`.
 
         Raises:
-            InvalidNoteId: `note_id` invalid
-            InvalidNextcloudCredentials: Credentials invalid
-            NoteNotFound: Note with id `note_id` doesn't exist
+            InvalidNoteId: `note_id` is an invalid ID.
+            InvalidNextcloudCredentials: Invalid credentials supplied.
+            NoteNotFound: Note with id `note_id` doesn't exist.
         """
         response = get(
             f'https://{self.hostname}/index.php/apps/notes/api/v1/notes/{note_id}',
@@ -139,19 +138,19 @@ class NotesApi:
         return Note(**response.json())
 
     def create_note(self, note: Note) -> Note:
-        """Create new note
+        """Create new note.
 
-        `note.id` and `note.modified` are set by the server
+        `Note.id` and `Note.modified` are set by the server.
 
         Args:
-            note (Note): Note to create
+            note (Note): Note to create.
 
         Returns:
-            Note: Created note with `note.id` and `note.modified` set
+            Note: Created note with `Note.id` and `Note.modified` set.
 
         Raises:
-            InvalidNextcloudCredentials: Credentials invalid
-            InsufficientNextcloudStorage: Not enough storage to save `note`
+            InvalidNextcloudCredentials: Invalid credentials supplied.
+            InsufficientNextcloudStorage: Not enough storage to save `note`.
         """
         response = post(
             f'https://{self.hostname}/index.php/apps/notes/api/v1/notes',
@@ -172,20 +171,21 @@ class NotesApi:
         return Note(**response.json())
 
     def update_note(self, note: Note) -> Note:
-        """Update `note`
+        """Update `note`.
 
         Args:
-            note (Note): New note, `note.id` has to be the id of the note to be replaced
+            note (Note): New note, `Note.id` has to match the ID of the note to be
+                replaced.
 
         Returns:
-            Note: Updated note with new `note.modified`
+            Note: Updated note with new `Note.modified`.
 
         Raises:
-            ValueError: `note.id` not set
-            InvalidNoteId: `note.id` invalid
-            InvalidNextcloudCredentials: Credentials invalid
-            NoteNotFound: Note with id `note.id` doesn't exist
-            InsufficientNextcloudStorage: Not enough storage to save `note`
+            ValueError: `Note.id` is not set.
+            InvalidNoteId: `Note.id` is an invalid ID.
+            InvalidNextcloudCredentials: Invalid credentials supplied.
+            NoteNotFound: Note with id `Note.id` doesn't exist.
+            InsufficientNextcloudStorage: Not enough storage to save `note`.
         """
         if not note.id:
             raise ValueError(f'Note id not set {note}')
@@ -214,15 +214,15 @@ class NotesApi:
         return Note(**response.json())
 
     def delete_note(self, note_id: int):
-        """Delete note with id `note_id`
+        """Delete note with ID `note_id`.
 
         Args:
-            note_id (int): Id of note to delete
+            note_id (int): ID of note to delete
 
         Raises:
-            InvalidNoteId: `note_id` invalid
-            InvalidNextcloudCredentials: Credentials invalid
-            NoteNotFound: Note with id `note_id` doesn't exist
+            InvalidNoteId: `note_id` is an invalid ID.
+            InvalidNextcloudCredentials: Invalid credentials supplied.
+            NoteNotFound: Note with id `note_id` doesn't exist.
         """
         response = delete(
             f'https://{self.hostname}/index.php/apps/notes/api/v1/notes/{note_id}',

@@ -33,7 +33,7 @@ from typing import Any, Dict, Optional
 
 
 class Note:
-    &#34;&#34;&#34;Represents a Nextcloud Notes note&#34;&#34;&#34;
+    &#34;&#34;&#34;Represents a Nextcloud Notes app note.&#34;&#34;&#34;
 
     def __init__(
         self,
@@ -48,51 +48,52 @@ class Note:
         generate_modified: bool = False,
         **_: Optional[Any],
     ):
-        &#34;&#34;&#34;See `Note.to_dict` for conversion to a dict
+        &#34;&#34;&#34;See `Note.to_dict` for conversion to a `dict`.
 
         Args:
-            title (str, optional): Note title. Defaults to None
-            content (str, optional): Note content. Defaults to None
-            category (str, optional): Note category. Defaults to None
+            title (str, optional): Note title. Defaults to None.
+            content (str, optional): Note content. Defaults to None.
+            category (str, optional): Note category. Defaults to None.
             favorite (bool, optional): Whether the note is marked as a favorite.
-                Defaults to None
-            id (int, optional): A unique note id. Defaults to None
-            modified (int, optional): When the note has last been modified as int posix
-                timestamp. Defaults to None
+                Defaults to None.
+            id (int, optional): A unique note ID. Defaults to None.
+            modified (int, optional): When the note has last been modified, as int posix
+                timestamp. Defaults to None.
             modified_datetime (datetime, optional): When the note has last been
                 modified as datetime object, preferred over `modified`. Defaults to
-                None
+                None.
             generate_modified (bool): Whether `Note.modified` should be set
-                to the current time. Defaults to False
-            _(Any, optional): Discard unused keyword arguments
+                to the current time. Overrides both `modified` and `modified_datetime`.
+                Defaults to False.
+            _(Any, optional): Discard unused keyword arguments.
         &#34;&#34;&#34;
         self.title = title
-        &#34;&#34;&#34;str: Note title&#34;&#34;&#34;
+        &#34;&#34;&#34;`str`: Note title.&#34;&#34;&#34;
         self.content = content
-        &#34;&#34;&#34;str: Note content&#34;&#34;&#34;
+        &#34;&#34;&#34;`str`: Note content.&#34;&#34;&#34;
         self.category = category
-        &#34;&#34;&#34;str: Note category&#34;&#34;&#34;
+        &#34;&#34;&#34;`str`: Note category.&#34;&#34;&#34;
         self.favorite = favorite
-        &#34;&#34;&#34;bool: Whether the note is marked as a favorite&#34;&#34;&#34;
+        &#34;&#34;&#34;`bool`: Whether the note is marked as a favorite.&#34;&#34;&#34;
         self.id = id
-        &#34;&#34;&#34;int: A unique note id&#34;&#34;&#34;
+        &#34;&#34;&#34;`int`: A unique note id.&#34;&#34;&#34;
         self.modified = (
             datetime.fromtimestamp(modified)
             if not modified_datetime and modified
             else modified_datetime
         )
-        &#34;&#34;&#34;datetime: When the note has last been modified&#34;&#34;&#34;
+        &#34;&#34;&#34;`datetime.datetime`: When the note has last been modified.&#34;&#34;&#34;
 
         if generate_modified:
             self.update_modified()
 
     def to_dict(self) -&gt; Dict[str, Any]:
-        &#34;&#34;&#34;Generate `dict` from this class
+        &#34;&#34;&#34;Generate a `dict` from this class.
 
-        `Note.modified` is converted to a int posix timestamp
+        `Note.modified` is converted to a int posix timestamp.
 
         Returns:
-            Dict[str, Any]: A `dict` containing the attributes of this class
+            Dict[str, Any]: A `dict` containing the attributes of this class.
         &#34;&#34;&#34;
         return {
             &#39;title&#39;: self.title,
@@ -104,11 +105,11 @@ class Note:
         }
 
     def update_modified(self, dt: datetime = None) -&gt; None:
-        &#34;&#34;&#34;Set `Note.modified` to `dt`
+        &#34;&#34;&#34;Set `Note.modified` to `dt`.
 
         Args:
             dt (datetime): The `datetime` object to set `Note.modified` to. Defaults to
-                `datetime.now()`
+                `datetime.now()`.
         &#34;&#34;&#34;
         if dt:
             self.modified = dt
@@ -142,39 +143,40 @@ class Note:
 <span>(</span><span>title: Optional[str] = None, content: Optional[str] = None, *, category: Optional[str] = None, favorite: Optional[bool] = None, id: Optional[int] = None, modified: Optional[int] = None, modified_datetime: Optional[datetime] = None, generate_modified: bool = False, **_: Optional[Any])</span>
 </code></dt>
 <dd>
-<div class="desc"><p>Represents a Nextcloud Notes note</p>
-<p>See <code><a title="nextcloud_notes_api.note.Note.to_dict" href="#nextcloud_notes_api.note.Note.to_dict">Note.to_dict()</a></code> for conversion to a dict</p>
+<div class="desc"><p>Represents a Nextcloud Notes app note.</p>
+<p>See <code><a title="nextcloud_notes_api.note.Note.to_dict" href="#nextcloud_notes_api.note.Note.to_dict">Note.to_dict()</a></code> for conversion to a <code>dict</code>.</p>
 <h2 id="args">Args</h2>
 <dl>
 <dt><strong><code>title</code></strong> :&ensp;<code>str</code>, optional</dt>
-<dd>Note title. Defaults to None</dd>
+<dd>Note title. Defaults to None.</dd>
 <dt><strong><code>content</code></strong> :&ensp;<code>str</code>, optional</dt>
-<dd>Note content. Defaults to None</dd>
+<dd>Note content. Defaults to None.</dd>
 <dt><strong><code>category</code></strong> :&ensp;<code>str</code>, optional</dt>
-<dd>Note category. Defaults to None</dd>
+<dd>Note category. Defaults to None.</dd>
 <dt><strong><code>favorite</code></strong> :&ensp;<code>bool</code>, optional</dt>
 <dd>Whether the note is marked as a favorite.
-Defaults to None</dd>
+Defaults to None.</dd>
 <dt><strong><code>id</code></strong> :&ensp;<code>int</code>, optional</dt>
-<dd>A unique note id. Defaults to None</dd>
+<dd>A unique note ID. Defaults to None.</dd>
 <dt><strong><code>modified</code></strong> :&ensp;<code>int</code>, optional</dt>
-<dd>When the note has last been modified as int posix
-timestamp. Defaults to None</dd>
+<dd>When the note has last been modified, as int posix
+timestamp. Defaults to None.</dd>
 <dt><strong><code>modified_datetime</code></strong> :&ensp;<code>datetime</code>, optional</dt>
 <dd>When the note has last been
 modified as datetime object, preferred over <code>modified</code>. Defaults to
-None</dd>
+None.</dd>
 <dt><strong><code>generate_modified</code></strong> :&ensp;<code>bool</code></dt>
 <dd>Whether <code><a title="nextcloud_notes_api.note.Note.modified" href="#nextcloud_notes_api.note.Note.modified">Note.modified</a></code> should be set
-to the current time. Defaults to False</dd>
+to the current time. Overrides both <code>modified</code> and <code>modified_datetime</code>.
+Defaults to False.</dd>
 </dl>
-<p>_(Any, optional): Discard unused keyword arguments</p></div>
+<p>_(Any, optional): Discard unused keyword arguments.</p></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
 </summary>
 <pre><code class="python">class Note:
-    &#34;&#34;&#34;Represents a Nextcloud Notes note&#34;&#34;&#34;
+    &#34;&#34;&#34;Represents a Nextcloud Notes app note.&#34;&#34;&#34;
 
     def __init__(
         self,
@@ -189,51 +191,52 @@ to the current time. Defaults to False</dd>
         generate_modified: bool = False,
         **_: Optional[Any],
     ):
-        &#34;&#34;&#34;See `Note.to_dict` for conversion to a dict
+        &#34;&#34;&#34;See `Note.to_dict` for conversion to a `dict`.
 
         Args:
-            title (str, optional): Note title. Defaults to None
-            content (str, optional): Note content. Defaults to None
-            category (str, optional): Note category. Defaults to None
+            title (str, optional): Note title. Defaults to None.
+            content (str, optional): Note content. Defaults to None.
+            category (str, optional): Note category. Defaults to None.
             favorite (bool, optional): Whether the note is marked as a favorite.
-                Defaults to None
-            id (int, optional): A unique note id. Defaults to None
-            modified (int, optional): When the note has last been modified as int posix
-                timestamp. Defaults to None
+                Defaults to None.
+            id (int, optional): A unique note ID. Defaults to None.
+            modified (int, optional): When the note has last been modified, as int posix
+                timestamp. Defaults to None.
             modified_datetime (datetime, optional): When the note has last been
                 modified as datetime object, preferred over `modified`. Defaults to
-                None
+                None.
             generate_modified (bool): Whether `Note.modified` should be set
-                to the current time. Defaults to False
-            _(Any, optional): Discard unused keyword arguments
+                to the current time. Overrides both `modified` and `modified_datetime`.
+                Defaults to False.
+            _(Any, optional): Discard unused keyword arguments.
         &#34;&#34;&#34;
         self.title = title
-        &#34;&#34;&#34;str: Note title&#34;&#34;&#34;
+        &#34;&#34;&#34;`str`: Note title.&#34;&#34;&#34;
         self.content = content
-        &#34;&#34;&#34;str: Note content&#34;&#34;&#34;
+        &#34;&#34;&#34;`str`: Note content.&#34;&#34;&#34;
         self.category = category
-        &#34;&#34;&#34;str: Note category&#34;&#34;&#34;
+        &#34;&#34;&#34;`str`: Note category.&#34;&#34;&#34;
         self.favorite = favorite
-        &#34;&#34;&#34;bool: Whether the note is marked as a favorite&#34;&#34;&#34;
+        &#34;&#34;&#34;`bool`: Whether the note is marked as a favorite.&#34;&#34;&#34;
         self.id = id
-        &#34;&#34;&#34;int: A unique note id&#34;&#34;&#34;
+        &#34;&#34;&#34;`int`: A unique note id.&#34;&#34;&#34;
         self.modified = (
             datetime.fromtimestamp(modified)
             if not modified_datetime and modified
             else modified_datetime
         )
-        &#34;&#34;&#34;datetime: When the note has last been modified&#34;&#34;&#34;
+        &#34;&#34;&#34;`datetime.datetime`: When the note has last been modified.&#34;&#34;&#34;
 
         if generate_modified:
             self.update_modified()
 
     def to_dict(self) -&gt; Dict[str, Any]:
-        &#34;&#34;&#34;Generate `dict` from this class
+        &#34;&#34;&#34;Generate a `dict` from this class.
 
-        `Note.modified` is converted to a int posix timestamp
+        `Note.modified` is converted to a int posix timestamp.
 
         Returns:
-            Dict[str, Any]: A `dict` containing the attributes of this class
+            Dict[str, Any]: A `dict` containing the attributes of this class.
         &#34;&#34;&#34;
         return {
             &#39;title&#39;: self.title,
@@ -245,11 +248,11 @@ to the current time. Defaults to False</dd>
         }
 
     def update_modified(self, dt: datetime = None) -&gt; None:
-        &#34;&#34;&#34;Set `Note.modified` to `dt`
+        &#34;&#34;&#34;Set `Note.modified` to `dt`.
 
         Args:
             dt (datetime): The `datetime` object to set `Note.modified` to. Defaults to
-                `datetime.now()`
+                `datetime.now()`.
         &#34;&#34;&#34;
         if dt:
             self.modified = dt
@@ -272,27 +275,27 @@ to the current time. Defaults to False</dd>
 <dl>
 <dt id="nextcloud_notes_api.note.Note.category"><code class="name">var <span class="ident">category</span></code></dt>
 <dd>
-<div class="desc"><p>str: Note category</p></div>
+<div class="desc"><p><code>str</code>: Note category.</p></div>
 </dd>
 <dt id="nextcloud_notes_api.note.Note.content"><code class="name">var <span class="ident">content</span></code></dt>
 <dd>
-<div class="desc"><p>str: Note content</p></div>
+<div class="desc"><p><code>str</code>: Note content.</p></div>
 </dd>
 <dt id="nextcloud_notes_api.note.Note.favorite"><code class="name">var <span class="ident">favorite</span></code></dt>
 <dd>
-<div class="desc"><p>bool: Whether the note is marked as a favorite</p></div>
+<div class="desc"><p><code>bool</code>: Whether the note is marked as a favorite.</p></div>
 </dd>
 <dt id="nextcloud_notes_api.note.Note.id"><code class="name">var <span class="ident">id</span></code></dt>
 <dd>
-<div class="desc"><p>int: A unique note id</p></div>
+<div class="desc"><p><code>int</code>: A unique note id.</p></div>
 </dd>
 <dt id="nextcloud_notes_api.note.Note.modified"><code class="name">var <span class="ident">modified</span></code></dt>
 <dd>
-<div class="desc"><p>datetime: When the note has last been modified</p></div>
+<div class="desc"><p><code>datetime.datetime</code>: When the note has last been modified.</p></div>
 </dd>
 <dt id="nextcloud_notes_api.note.Note.title"><code class="name">var <span class="ident">title</span></code></dt>
 <dd>
-<div class="desc"><p>str: Note title</p></div>
+<div class="desc"><p><code>str</code>: Note title.</p></div>
 </dd>
 </dl>
 <h3>Methods</h3>
@@ -301,24 +304,24 @@ to the current time. Defaults to False</dd>
 <span>def <span class="ident">to_dict</span></span>(<span>self) ‑> Dict[str, Any]</span>
 </code></dt>
 <dd>
-<div class="desc"><p>Generate <code>dict</code> from this class</p>
-<p><code><a title="nextcloud_notes_api.note.Note.modified" href="#nextcloud_notes_api.note.Note.modified">Note.modified</a></code> is converted to a int posix timestamp</p>
+<div class="desc"><p>Generate a <code>dict</code> from this class.</p>
+<p><code><a title="nextcloud_notes_api.note.Note.modified" href="#nextcloud_notes_api.note.Note.modified">Note.modified</a></code> is converted to a int posix timestamp.</p>
 <h2 id="returns">Returns</h2>
 <dl>
 <dt><code>Dict[str, Any]</code></dt>
-<dd>A <code>dict</code> containing the attributes of this class</dd>
+<dd>A <code>dict</code> containing the attributes of this class.</dd>
 </dl></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
 </summary>
 <pre><code class="python">def to_dict(self) -&gt; Dict[str, Any]:
-    &#34;&#34;&#34;Generate `dict` from this class
+    &#34;&#34;&#34;Generate a `dict` from this class.
 
-    `Note.modified` is converted to a int posix timestamp
+    `Note.modified` is converted to a int posix timestamp.
 
     Returns:
-        Dict[str, Any]: A `dict` containing the attributes of this class
+        Dict[str, Any]: A `dict` containing the attributes of this class.
     &#34;&#34;&#34;
     return {
         &#39;title&#39;: self.title,
@@ -334,23 +337,23 @@ to the current time. Defaults to False</dd>
 <span>def <span class="ident">update_modified</span></span>(<span>self, dt: datetime = None) ‑> NoneType</span>
 </code></dt>
 <dd>
-<div class="desc"><p>Set <code><a title="nextcloud_notes_api.note.Note.modified" href="#nextcloud_notes_api.note.Note.modified">Note.modified</a></code> to <code>dt</code></p>
+<div class="desc"><p>Set <code><a title="nextcloud_notes_api.note.Note.modified" href="#nextcloud_notes_api.note.Note.modified">Note.modified</a></code> to <code>dt</code>.</p>
 <h2 id="args">Args</h2>
 <dl>
 <dt><strong><code>dt</code></strong> :&ensp;<code>datetime</code></dt>
 <dd>The <code>datetime</code> object to set <code><a title="nextcloud_notes_api.note.Note.modified" href="#nextcloud_notes_api.note.Note.modified">Note.modified</a></code> to. Defaults to
-<code>datetime.now()</code></dd>
+<code>datetime.now()</code>.</dd>
 </dl></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
 </summary>
 <pre><code class="python">def update_modified(self, dt: datetime = None) -&gt; None:
-    &#34;&#34;&#34;Set `Note.modified` to `dt`
+    &#34;&#34;&#34;Set `Note.modified` to `dt`.
 
     Args:
         dt (datetime): The `datetime` object to set `Note.modified` to. Defaults to
-            `datetime.now()`
+            `datetime.now()`.
     &#34;&#34;&#34;
     if dt:
         self.modified = dt
