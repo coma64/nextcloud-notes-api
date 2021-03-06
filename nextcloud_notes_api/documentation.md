@@ -6,7 +6,7 @@ All interaction with the API is done through the `NotesApi` object.
 
 Wrong credentials or hostname won't throw, until you interact with the API.
 Any of the above can be updated, by setting the respective attribute (e.g. `NotesApi.password`).
-If your host does not support ETag caching disable it with `etag_caching=False`.
+If your host does not support ETag caching, you can disable it by passing `etag_caching=False`.
 
 ```py
 from nextcloud_notes_api import NotesApi, Note
@@ -50,7 +50,7 @@ Notes can be updated by passing a `Note` with the correct
 `Note.id` to `NotesApi.update_note()`.
 
 ```py
-note = api.get_single_note(1337)
+note = api.get_single_note(id)
 
 note.content = 'elite'
 note.update_modified()
