@@ -10,7 +10,7 @@ A [Nextcloud Notes app](https://github.com/nextcloud/notes) API wrapper.
 ```py
 from nextcloud_notes_api import NotesApi, Note
 
-api = NotesApi('username', 'pass', 'hostname')
+api = NotesApi('username', 'password', 'example.org')
 
 note = Note('Shopping List', 'Spam', favorite=True)
 api.create_note(note)
