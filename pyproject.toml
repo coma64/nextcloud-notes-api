@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "nextcloud-notes-api"
-version = "0.1.0"
+version = "1.0.0"
 description = "A Nextcloud Notes app API wrapper"
 authors = ["coma64 <coma64@outlook.com>"]
 keywords = ["nextcloud", "notes", "api", "api-wrapper"]
