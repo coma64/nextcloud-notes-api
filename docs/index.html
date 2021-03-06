@@ -30,7 +30,7 @@
 <h2 id="logging-in">Logging In</h2>
 <p>Wrong credentials or hostname won't throw, until you interact with the API.
 Any of the above can be updated, by setting the respective attribute (e.g. <code><a title="nextcloud_notes_api.NotesApi.password" href="#nextcloud_notes_api.NotesApi.password">NotesApi.password</a></code>).
-If your host does not support ETag caching disable it with <code>etag_caching=False</code>.</p>
+If your host does not support ETag caching, you can disable it by passing <code>etag_caching=False</code>.</p>
 <pre><code class="language-py">from nextcloud_notes_api import NotesApi, Note
 
 api = NotesApi('username', 'password', 'hostname')
@@ -57,7 +57,7 @@ api.create_note(note)
 <h2 id="updating-notes">Updating Notes</h2>
 <p>Notes can be updated by passing a <code><a title="nextcloud_notes_api.Note" href="#nextcloud_notes_api.Note">Note</a></code> with the correct
 <code><a title="nextcloud_notes_api.Note.id" href="#nextcloud_notes_api.Note.id">Note.id</a></code> to <code><a title="nextcloud_notes_api.NotesApi.update_note" href="#nextcloud_notes_api.NotesApi.update_note">NotesApi.update_note()</a></code>.</p>
-<pre><code class="language-py">note = api.get_single_note(1337)
+<pre><code class="language-py">note = api.get_single_note(id)
 
 note.content = 'elite'
 note.update_modified()
