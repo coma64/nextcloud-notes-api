@@ -1,44 +1,59 @@
 # nextcloud-notes-api
 
+<div style="display: flex; justify-content: space-evenly; flex-wrap: wrap;">
 <a
   href="https://github.com/coma64/nextcloud-notes-api/actions?query=workflow%3ATest"
-  target="_blank" style="float: left; margin-right: 1rem;">
+  target="_blank" style="display: inline-block; margin: 0px 0.5rem;">
 <img src="https://github.com/coma64/nextcloud-notes-api/workflows/Test/badge.svg"
-    alt="Test" style="display: inline;">
+  alt="Test">
 </a>
 
 <a
   href="https://github.com/coma64/nextcloud-notes-api/actions?query=workflow%3ASuper-Linter"
-  target="_blank" style="float: left; margin-right:1rem;">
+  target="_blank" style="display: inline-block; margin: 0px 0.5rem;">
 <img src="https://github.com/coma64/nextcloud-notes-api/workflows/Super-Linter/badge.svg"
-    alt="Test" style="display: inline;">
+  alt="Test">
 </a>
 
-<a href="https://codecov.io/gh/coma64/nextcloud-notes-api" target="_blank">
+<a href="https://codecov.io/gh/coma64/nextcloud-notes-api" target="_blank"
+  style="display: inline-block; margin: 0px 0.5rem;">
 <img
-src="https://img.shields.io/codecov/c/github/coma64/nextcloud-notes-api?color=%2334D058"
-alt="Coverage" style="display: inline;">
+  src="https://img.shields.io/codecov/c/github/coma64/nextcloud-notes-api?color=%2334D058"
+  alt="Coverage">
 </a>
-<br />
 
-## About
+</div>
 
-A [Nextcloud Notes](https://github.com/nextcloud/notes) API wrapper
+A [Nextcloud Notes App](https://github.com/nextcloud/notes) API wrapper
 
-## Todo
+```py
+from nextcloud_notes_api import NotesApi, Note
 
-- [x] fix typehints
-- [x] store datetime object instead of float in Note.modified
-- [x] add license
-- [x] remove Note.from_dict and use init with keyword args instead
-- [x] add NotesApi docs
-- [x] update Note tests
-- [x] use generic type hints (List -> Sequence)
-- [ ] publish to pip and readthedocs
-- [x] stricter code formatter than autopep8
-- [x] run tests powershell / shell script
-- [x] build docs shell script
-- [ ] usage examples
-- [x] classes
-  - [x] NotesApi
-    - [x] api endpoints
+api = NotesApi('username', 'pass', 'hostname')
+
+note = Note('Shopping List', 'Spam', favorite=True)
+api.create_note(note)
+```
+
+_*nextcloud-notes-api is not supported nor endorsed by Nextcloud*_
+
+## Installation
+
+```sh
+pip install nextcloud-notes-api
+```
+
+## Documentation
+
+The docs are available on [Github Pages](https://coma64.github.io/nextcloud-notes-api/)
+
+## Contributing
+
+Pull requests are welcome. For major changes,
+please open an issue first to discuss what you would like to change.
+
+Please make sure to update tests and documentation as appropriate.
+
+## License
+
+[MIT](https://choosealicense.com/licenses/mit/)
