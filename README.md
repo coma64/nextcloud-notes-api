@@ -3,6 +3,7 @@
 [![Test](https://github.com/coma64/nextcloud-notes-api/workflows/Test/badge.svg)](https://github.com/coma64/nextcloud-notes-api/actions?query=workflow%3ATest)
 [![Super-Linter](https://github.com/coma64/nextcloud-notes-api/workflows/Super-Linter/badge.svg)](https://github.com/coma64/nextcloud-notes-api/actions?query=workflow%3ASuper-Linter)
 [![Coverage](https://img.shields.io/codecov/c/github/coma64/nextcloud-notes-api?color=%2334D058)](https://codecov.io/gh/coma64/nextcloud-notes-api)
+[![PyPi](https://img.shields.io/pypi/v/nextcloud-notes-api)](https://pypi.org/project/nextcloud-notes-api/)
 
 A [Nextcloud Notes app](https://github.com/nextcloud/notes) API wrapper.
 
