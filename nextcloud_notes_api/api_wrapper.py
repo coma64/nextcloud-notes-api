@@ -44,8 +44,7 @@ class NotesApi:
         """`bool`: Whether to cache notes using HTTP ETags."""
 
         self._etag_cache = NotesApi.EtagCache()
-        # TODO: Make commono_headers private
-        self.common_headers = {'OCS-APIRequest': 'true', 'Accept': 'application/json'}
+        self._common_headers = {'OCS-APIRequest': 'true', 'Accept': 'application/json'}
 
     @property
     def auth_pair(self) -> Tuple[str, str]:
@@ -60,7 +59,7 @@ class NotesApi:
         response = get(
             f'https://{self.hostname}/ocs/v2.php/cloud/capabilities',
             auth=self.auth_pair,
-            headers=self.common_headers,
+            headers=self._common_headers,
         )
 
         return response.json()['ocs']['data']['capabilities']['notes']['api_version'][
@@ -77,7 +76,7 @@ class NotesApi:
         Raises:
             InvalidNextcloudCredentials: Invalid credentials supplied.
         """
-        headers = self.common_headers
+        headers = self._common_headers
         if self.etag_caching:
             headers['If-None-Match'] = self._etag_cache.etag
 
@@ -123,7 +122,7 @@ class NotesApi:
         response = get(
             f'https://{self.hostname}/index.php/apps/notes/api/v1/notes/{note_id}',
             auth=self.auth_pair,
-            headers=self.common_headers,
+            headers=self._common_headers,
         )
 
         if response.status_code == 400:
@@ -155,7 +154,7 @@ class NotesApi:
         response = post(
             f'https://{self.hostname}/index.php/apps/notes/api/v1/notes',
             auth=self.auth_pair,
-            headers=self.common_headers,
+            headers=self._common_headers,
             data=note.to_dict(),
         )
 
@@ -196,7 +195,7 @@ class NotesApi:
         response = put(
             f'https://{self.hostname}/index.php/apps/notes/api/v1/notes/{note.id}',
             auth=self.auth_pair,
-            headers=self.common_headers,
+            headers=self._common_headers,
             data=data,
         )
 
@@ -227,7 +226,7 @@ class NotesApi:
         response = delete(
             f'https://{self.hostname}/index.php/apps/notes/api/v1/notes/{note_id}',
             auth=self.auth_pair,
-            headers=self.common_headers,
+            headers=self._common_headers,
         )
 
         if response.status_code == 400:
