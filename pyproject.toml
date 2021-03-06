@@ -1,9 +1,13 @@
 [tool.poetry]
 name = "nextcloud-notes-api"
 version = "0.1.0"
-description = ""
+description = "A Nextcloud Notes app API wrapper"
 authors = ["coma64 <coma64@outlook.com>"]
-keywords = ["nextcloud", "notes", "api"]
+keywords = ["nextcloud", "notes", "api", "api-wrapper"]
+readme = "README.md"
+license = "MIT"
+repository = "https://github.com/coma64/nextcloud-notes-api"
+documentation = "https://coma64.github.io/nextcloud-notes-api/"
 
 [tool.poetry.dependencies]
 python = "^3.7"
