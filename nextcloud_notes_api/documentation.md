@@ -11,8 +11,8 @@ If your host does not support ETag caching, you can disable it by passing `etag_
 ```py
 from nextcloud_notes_api import NotesApi, Note
 
-api = NotesApi('username', 'password', 'hostname')
-api.password = 'spam'
+api = NotesApi('username', 'password', 'example.org')
+api.password = 's3creTpaSSw0rd'
 ```
 
 ## Fetching Notes
@@ -20,7 +20,7 @@ api.password = 'spam'
 Notes can be retrieved via `NotesApi.get_single_note()` by their ID.
 
 ```py
-note = api.get_single_note(id)
+note = api.get_single_note(666)
 ```
 
 To fetch all notes, use `NotesApi.get_all_notes()`.
@@ -38,10 +38,18 @@ for note in notes:
 ## Creating Notes
 
 To create a new note first instanciate a `Note` and then pass it to `NotesApi.create_note()`.
+`NotesApi.create_note()` returns the note with attributes set according the
+its docs.
 
 ```py
-note = Note('Todo', 'Buy beer')
-api.create_note(note)
+# Yes, markdown is supported by the Nextcloud Notes app.
+content = """# Todo
+- buy chips
+- buy beer
+- clean up the mess from last weekend
+"""
+note = Note('Todo', content)
+note = api.create_note(note)
 ```
 
 ## Updating Notes
@@ -50,7 +58,7 @@ Notes can be updated by passing a `Note` with the correct
 `Note.id` to `NotesApi.update_note()`.
 
 ```py
-note = api.get_single_note(id)
+note = api.get_single_note(1337)
 
 note.content = 'elite'
 note.update_modified()
@@ -63,5 +71,5 @@ api.update_note(note)
 To delete a note pass it's ID to `NotesApi.delete_note()`.
 
 ```py
-api.delete_note(1337)
+api.delete_note(420)
 ```

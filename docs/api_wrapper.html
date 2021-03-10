@@ -168,6 +168,8 @@ class NotesApi:
         &#34;&#34;&#34;Create new note.
 
         `Note.id` and `Note.modified` are set by the server.
+        `Note.title` will also be changed in case there already is a note with the same
+        title, e.g. &#39;Todo&#39; -&gt; &#39;Todo (2)&#39;.
 
         Args:
             note (Note): Note to create.
@@ -428,6 +430,8 @@ the server supports it. Defaults to True.</dd>
         &#34;&#34;&#34;Create new note.
 
         `Note.id` and `Note.modified` are set by the server.
+        `Note.title` will also be changed in case there already is a note with the same
+        title, e.g. &#39;Todo&#39; -&gt; &#39;Todo (2)&#39;.
 
         Args:
             note (Note): Note to create.
@@ -575,7 +579,9 @@ def auth_pair(self) -&gt; Tuple[str, str]:
 </code></dt>
 <dd>
 <div class="desc"><p>Create new note.</p>
-<p><code>Note.id</code> and <code>Note.modified</code> are set by the server.</p>
+<p><code>Note.id</code> and <code>Note.modified</code> are set by the server.
+<code>Note.title</code> will also be changed in case there already is a note with the same
+title, e.g. 'Todo' -&gt; 'Todo (2)'.</p>
 <h2 id="args">Args</h2>
 <dl>
 <dt><strong><code>note</code></strong> :&ensp;<code>Note</code></dt>
@@ -601,6 +607,8 @@ def auth_pair(self) -&gt; Tuple[str, str]:
     &#34;&#34;&#34;Create new note.
 
     `Note.id` and `Note.modified` are set by the server.
+    `Note.title` will also be changed in case there already is a note with the same
+    title, e.g. &#39;Todo&#39; -&gt; &#39;Todo (2)&#39;.
 
     Args:
         note (Note): Note to create.

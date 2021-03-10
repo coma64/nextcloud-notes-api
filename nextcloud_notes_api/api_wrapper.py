@@ -140,6 +140,8 @@ class NotesApi:
         """Create new note.
 
         `Note.id` and `Note.modified` are set by the server.
+        `Note.title` will also be changed in case there already is a note with the same
+        title, e.g. 'Todo' -> 'Todo (2)'.
 
         Args:
             note (Note): Note to create.
