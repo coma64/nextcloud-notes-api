@@ -42,3 +42,5 @@ Please make sure to update tests and documentation as appropriate.
 ## Todo
 
 - Lazy note list with fuzzy searching through all notes
+- Maintain reference to api inside note object to be able to sync, delete, ...
+  through it
