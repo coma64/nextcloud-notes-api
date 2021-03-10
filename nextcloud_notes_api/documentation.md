@@ -31,7 +31,7 @@ loop or converting it to a `list`.
 ```py
 notes = api.get_all_notes()
 
-for (note in notes):
+for note in notes:
     print(note.title)
 ```
 
