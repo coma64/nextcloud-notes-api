@@ -12,7 +12,7 @@ If your host does not support ETag caching, you can disable it by passing `etag_
 from nextcloud_notes_api import NotesApi, Note
 
 api = NotesApi('username', 'password', 'example.org')
-api.password = 's3creTpaSSw0rd'
+api.password = 'other-password'
 ```
 
 ## Fetching Notes

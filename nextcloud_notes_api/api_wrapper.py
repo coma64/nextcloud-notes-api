@@ -147,7 +147,7 @@ class NotesApi:
             note (Note): Note to create.
 
         Returns:
-            Note: Created note with `Note.id` and `Note.modified` set.
+            Note: Created note with changed attributes.
 
         Raises:
             InvalidNextcloudCredentials: Invalid credentials supplied.
